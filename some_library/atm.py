@@ -17,14 +17,15 @@ class BancoDeDados:
         pass
 
 class Usuario:
-    def __init__(self, nome, endereco, telefone, senha):
+    def __init__(self, nome, endereco, telefone, senha, codigo):
         self.nome = nome
         self.endereco = endereco
         self.telefone = telefone
         self.senha = senha
+        self.codigo = codigo
 
 class Gerente(Usuario):
-    def __init__(self, nome, endereco, telefone, senha):
+    def __init__(self, nome, endereco, telefone, senha, codigo):
         super().__init__(nome, endereco, telefone, senha)
 
     def cadastrar_user(self):
@@ -40,7 +41,7 @@ class Gerente(Usuario):
         pass
 
 class Cliente(Usuario):
-    def __init__(self, saldo, nome, endereco, telefone, senha):
+    def __init__(self, saldo, nome, endereco, telefone, senha, codigo):
         super().__init__(nome, endereco, telefone, senha)
         self.saldo = 0
 
