@@ -56,8 +56,6 @@ class Cliente(Usuario):
     def visualiar_historico(self):
         pass
     
-    def solicitar_credito(self):
-        pass
     
 class Empresa(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cnpj):
