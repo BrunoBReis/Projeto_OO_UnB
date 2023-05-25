@@ -2,8 +2,17 @@
     "100027": {
         "Tipo": "Pessoa",
         "Nome": "Julia",
-        "Endereco": "Sqs 110 Bloco A",
+        "Endereco": "abcdef",
         "Telefone": "99122-3445",
-        "Senha": "abcd123"
+        "Senha": "abcd123",
+        "CPF/CNPJ": "73809566666"
+    },
+    "000184": {
+        "Tipo": "Empresa",
+        "Nome": "Apple",
+        "Endereco": "jbfahsdbjv",
+        "Telefone": "8000-3420",
+        "Senha": "apple2000",
+        "CPF/CNPJ": "20-2394889898.38"
     }
 }
