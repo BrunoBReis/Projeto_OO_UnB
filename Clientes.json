@@ -1,18 +1,20 @@
 {
-    "100027": {
-        "Tipo": "Pessoa",
-        "Nome": "Julia",
-        "Endereco": "abcdef",
-        "Telefone": "99122-3445",
-        "Senha": "abcd123",
-        "CPF/CNPJ": "73809566666"
-    },
     "000184": {
         "Tipo": "Empresa",
         "Nome": "Apple",
         "Endereco": "jbfahsdbjv",
         "Telefone": "8000-3420",
         "Senha": "apple2000",
-        "CPF/CNPJ": "20-2394889898.38"
+        "CPF/CNPJ": "20-2394889898.38",
+        "Saldo": 25000.0
+    },
+    "100027": {
+        "Tipo": "Pessoa",
+        "Nome": "Julia",
+        "Endereco": "abcdef",
+        "Telefone": "99122-3445",
+        "Senha": "abcd123",
+        "CPF/CNPJ": "73809566666",
+        "Saldo": 0.0
     }
 }

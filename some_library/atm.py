@@ -1,20 +1,28 @@
+import json
+
 class SistemaBancario:
     def __init__(self):
-        pass
+        self.bancoDados = BancoDeDados()
     
     def menu(self):
         pass
 
 class BancoDeDados:
-    def __init__(self, gerentes, clientes):
-        self.gerentes = {}
-        self.clientes = {}
+
+    def __init__(self):
+        with open("Gerentes.json") as GeFile:
+            self.gerentes = json.load(GeFile)
+        with open("Clientes.json") as CliFile:
+            self.clientes = json.load(CliFile)
+        with open("Historico.json") as HistFile:
+            self.historico = json.load(HistFile)
 
     def armazena_dados(self):
         pass
 
     def busca_dados(self):
         pass
+        
 
 class Usuario:
     def __init__(self, nome, endereco, telefone, senha, codigo):
@@ -42,8 +50,8 @@ class Gerente(Usuario):
 
 class Cliente(Usuario):
     def __init__(self, saldo, nome, endereco, telefone, senha, codigo):
-        super().__init__(nome, endereco, telefone, senha)
-        self.saldo = 0
+        super().__init__(nome, endereco, telefone, senha, codigo)
+        self.saldo = saldo
 
     def sacar(self):
         pass
