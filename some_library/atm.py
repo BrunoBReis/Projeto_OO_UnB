@@ -71,6 +71,7 @@ class BancoDeDados:
         
 
 class Usuario:
+    
     def __init__(self, nome, endereco, telefone, senha, codigo):
         self.nome = nome
         self.endereco = endereco
@@ -79,20 +80,48 @@ class Usuario:
         self.codigo = codigo
 
 class Gerente(Usuario):
+    
     def __init__(self, nome, endereco, telefone, senha, codigo):
         super().__init__(nome, endereco, telefone, senha)
 
-    def cadastrar_user(self):
-        pass
+    def cadastrar_user(self, clientes, tipo, nome, endereco, telefone, senha, codigo, cpf_cnpj, saldo):
+        novo_cliente = {"Tipo" : tipo, "Nome" : nome, "Endereco" : endereco, "Telefone" : telefone, "Senha" : senha, "CPF/CNPJ" : cpf_cnpj, "Saldo" : saldo}
+        clientes.update({codigo : novo_cliente})
+        with open("Clientes.json", "w") as arquivo:
+            json.dump(clientes, arquivo, indent=4)
     
-    def remover_user(self):
-        pass
+    def remover_user(self, clientes, codigo):
+        clientes.pop(codigo, "ok")
+        with open("Clientes.json", "w") as arquivo:
+            json.dump(clientes, arquivo, indent=4)
     
-    def editar_user(self):
-        pass
-    
-    def visualiza_user(self):
-        pass
+    def editar_user(self, clientes, codigo):
+        print ("""O que você quer editar?
+    1)Nome
+    2)Endereco
+    3)Telefone
+    4)Senha
+    5)Sair do modo de edição""")
+        res = input("Resposta: ")
+        if res == "1":
+            clientes[codigo]["Nome"] = input("Novo Nome: ")
+        if res == "2":
+            clientes[codigo]["Endereco"] = input("Novo Endereco: ")
+        if res == "3":
+            clientes[codigo]["Telefone"] = input("Nova Telefone: ")
+        if res == "4":
+            clientes[codigo]["Senha"] = input("Nova Senha: ")
+        else:
+            pass
+        with open("Clientes.json", "w") as arquivo:
+            json.dump(clientes, arquivo, indent=4)
+        
+    def visualiza_user(self, clientes):
+        for conta in clientes:
+            print (f"[{conta}]\n\n")
+            for item in clientes[conta]:
+                print (f"{item}: {clientes[conta][item]}")
+            print ("\n\n")
 
 class Cliente(Usuario):
     def __init__(self, saldo, nome, endereco, telefone, senha, codigo):
