@@ -62,14 +62,19 @@ def visualiza_user(clientes):
         print ("\n\n")
 
 
-with open("Clientes.json") as file:
-    clientes = json.load(file)
-with open("Historico.json") as file:
-    historico = json.load(file)
-cadastrar_user(clientes, "Pessoa", "Julia", "abcdef", "99122-3445", "abcd123", "100027", "73809566666", 0.00)
-cadastrar_user(clientes, "Empresa", "Apple", "jbfahsdbjv", "8000-3420", "apple2000", "000184", "20-2394889898.38", 25000.00)
+#with open("Clientes.json") as file:
+#    clientes = json.load(file)
+#with open("Historico.json") as file:
+#    historico = json.load(file)
+#cadastrar_user(clientes, "Pessoa", "Julia", "abcdef", "99122-3445", "abcd123", "100027", "73809566666", 0.00)
+#cadastrar_user(clientes, "Empresa", "Apple", "jbfahsdbjv", "8000-3420", "apple2000", "000184", "20-2394889898.38", 25000.00)
 #with open("Clientes.json") as file:
 #    clientes = json.load(file)
 #visualiza_user(clientes)
-databank = BancoDeDados()
-print(databank.gerentes)
+#databank = BancoDeDados()
+#print(databank.gerentes)
+
+start = SistemaBancario()
+
+start.login()
+print(start.bancoDados.ger)

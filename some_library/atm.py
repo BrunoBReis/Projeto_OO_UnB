@@ -4,6 +4,41 @@ class SistemaBancario:
     def __init__(self):
         self.bancoDados = BancoDeDados()
     
+    def login(self):
+        print("""Escolha uma das opções abaixo:
+1) Gerente
+2) Cliente
+
+Resposta: """)
+        esco = input(" ")
+        if esco  == "1":
+            print("\n\n GERENTE \n\n")
+            cod = input("Código da conta: ")
+            senha = input("Senha: ")
+            if (cod in self.bancoDados.gerentes) == True:
+                if (senha in self.bancoDados.gerentes[cod]["Senha"]) == True:
+                    self.bancoDados.ger = self.bancoDados.gerentes[cod]
+                    nome = self.bancoDados.ger["Nome"]
+                    print(f"Login com Sucesso! Seja bem vindo {nome}")
+                else:
+                    print("Falha no login! Senha incorreta!")
+            else: 
+                print("Falha no login, conta inexistente!")
+        else:
+            print("\n\n CLIENTE \n\n")
+            cod = input("Código da conta: ")
+            senha = input("Senha: ")
+            if (cod in self.bancoDados.clientes) == True:
+                if (senha in self.bancoDados.clientes[cod]["Senha"]) == True:
+                    self.bancoDados.cli = self.bancoDados.clientes[cod]
+                    nome = self.bancoDados.cli["Nome"]
+                    print(f"Login com Sucesso! Seja bem vindo {nome}")
+                else:
+                    print("Falha no login! Senha incorreta!")
+            else: 
+                print("Falha no login, conta inexistente!")
+        
+
     def menu(self):
         pass
 
@@ -16,6 +51,9 @@ class BancoDeDados:
             self.clientes = json.load(CliFile)
         with open("Historico.json") as HistFile:
             self.historico = json.load(HistFile)
+        self.hist = {}
+        self.cli = {}
+        self.ger = {}
 
     def armazena_dados(self):
         pass
