@@ -13,8 +13,17 @@
         "Nome": "Julia",
         "Endereco": "abcdef",
         "Telefone": "99122-3445",
-        "Senha": "abcd123",
+        "Senha": "senha",
         "CPF/CNPJ": "73809566666",
         "Saldo": 0.0
+    },
+    "100042": {
+        "Tipo": "Pessoa",
+        "Nome": "Alberto Alemao",
+        "Endereco": "Abadiania Leste",
+        "Telefone": "8888-6578",
+        "Senha": "senha",
+        "CPF/CNPJ": "78390500012",
+        "Saldo": 599.0
     }
 }

@@ -20,38 +20,39 @@ class SistemaBancario:
 # Função para reconhecer código da conta e senha para logar como "Gerente" ou "Cliente"
 
     def login(self):
-        print("""Escolha uma das opções abaixo:
+        while True:
+            print("""Escolha uma das opções abaixo:
 1) Gerente
 2) Cliente
 
 Resposta: """)
-        esco = input(" ")
-        if esco  == "1":
-            print("\n\n GERENTE \n\n")
-            cod = input("Código da conta: ")
-            senha = input("Senha: ")
-            if (cod in self.bancoDados.gerentes) == True:
-                if (senha in self.bancoDados.gerentes[cod]["Senha"]) == True:
-                    nome = self.bancoDados.gerentes[cod]["Nome"]
-                    print(f"Login com Sucesso! Seja bem vindo {nome}")
-                    return self.bancoDados.gerentes[cod]
-                else:
-                    print("Falha no login! Senha incorreta!")
-            else: 
-                print("Falha no login, conta inexistente!")
-        else:
-            print("\n\n CLIENTE \n\n")
-            cod = input("Código da conta: ")
-            senha = input("Senha: ")
-            if (cod in self.bancoDados.clientes) == True:
-                if (senha in self.bancoDados.clientes[cod]["Senha"]) == True:
-                    nome = self.bancoDados.clientes[cod]["Nome"]
-                    print(f"Login com Sucesso! Seja bem vindo {nome}")
-                    return self.bancoDados.clientes[cod]
-                else:
-                    print("Falha no login! Senha incorreta!")
-            else: 
-                print("Falha no login, conta inexistente!")
+            esco = input(" ")
+            if esco  == "1":
+                print("\n\n GERENTE \n\n")
+                cod = input("Código da conta: ")
+                senha = input("Senha: ")
+                if (cod in self.bancoDados.gerentes) == True:
+                    if (senha == self.bancoDados.gerentes[cod]["Senha"]) == True:
+                        nome = self.bancoDados.gerentes[cod]["Nome"]
+                        print(f"Login com Sucesso! Seja bem vindo {nome}")
+                        return self.bancoDados.gerentes[cod]
+                    else:
+                        print("Falha no login! Senha incorreta!\n\n")
+                else: 
+                    print("Falha no login, conta inexistente!\n\n")
+            else:
+                print("\n\n CLIENTE \n\n")
+                cod = input("Código da conta: ")
+                senha = input("Senha: ")
+                if (cod in self.bancoDados.clientes) == True:
+                    if (senha == self.bancoDados.clientes[cod]["Senha"]) == True:
+                        nome = self.bancoDados.clientes[cod]["Nome"]
+                        print(f"Login com Sucesso! Seja bem vindo {nome}")
+                        return self.bancoDados.clientes[cod]
+                    else:
+                        print("Falha no login! Senha incorreta!\n\n")
+                else: 
+                    print("Falha no login, conta inexistente!\n\n")
         
 
     def menu(self):
