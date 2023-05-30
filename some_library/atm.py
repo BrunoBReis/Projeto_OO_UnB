@@ -69,7 +69,7 @@ class BancoDeDados:
     def busca_dados(self):
         pass
         
-
+# na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
     def __init__(self, nome, endereco, telefone, senha, codigo):
         self.nome = nome
@@ -104,7 +104,7 @@ class Cliente(Usuario):
             self.saldo -= valor
             print(f'Você sacou {valor} reais da sua conta')
         else:
-            print(f'{self.nome}saldo insuficiente')
+            print(f'{self.nome} saldo insuficiente')
     
     def depositar(self):
         pass
