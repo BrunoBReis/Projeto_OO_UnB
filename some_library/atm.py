@@ -113,16 +113,16 @@ class Cliente(Usuario):
     
     
 class Empresa(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj):
-        super().__init__(saldo, nome, endereco, telefone, senha)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, codigo):
+        super().__init__(saldo, nome, endereco, telefone, senha, codigo)
         self.cnpj = cnpj
 
     def solicitar_credito(self):
         pass
     
 class PessoaFisica(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cpf):
-        super().__init__(saldo, nome, endereco, telefone, senha)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cpf, codigo):
+        super().__init__(saldo, nome, endereco, telefone, senha, codigo)
         self.cpf = cpf
 
     def solicitar_credito(self):
