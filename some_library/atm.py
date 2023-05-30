@@ -99,8 +99,12 @@ class Cliente(Usuario):
         super().__init__(nome, endereco, telefone, senha, codigo)
         self.saldo = saldo
 
-    def sacar(self):
-        pass
+    def sacar(self, valor):
+        if self.saldo >= valor:
+            self.saldo -= valor
+            print(f'Você sacou {valor} reais da sua conta')
+        else:
+            print(f'{self.nome}saldo insuficiente')
     
     def depositar(self):
         pass
