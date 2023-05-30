@@ -3,6 +3,7 @@
         "Nome" : "Davi Klein Levy",
         "Endereco" : "SQS 1002, Bl. Z - apt 000",
         "Telefone" : "+55 (61) 99876-2256",
-        "Senha" : "senha123"
+        "Senha" : "senha123",
+        "Tipo" : "Gerente"
     }
 }

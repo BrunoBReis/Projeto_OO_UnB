@@ -6,6 +6,16 @@ class SistemaBancario:
 
     def __init__(self):
         self.bancoDados = BancoDeDados()
+        self.hist = {}
+        self.usuario = self.login()
+        if "Saldo" in self.usuario == True:
+            if self.usuario["Tipo"] == "Empresa":
+                self.user = Empresa(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"])
+            else:
+                self.user = PessoaFisica(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"])
+        else:
+                self.user = Gerente(self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], "000100", self.usuario["Tipo"])   
+
     
 # Função para reconhecer código da conta e senha para logar como "Gerente" ou "Cliente"
 
@@ -22,9 +32,9 @@ Resposta: """)
             senha = input("Senha: ")
             if (cod in self.bancoDados.gerentes) == True:
                 if (senha in self.bancoDados.gerentes[cod]["Senha"]) == True:
-                    self.bancoDados.ger = self.bancoDados.gerentes[cod]
-                    nome = self.bancoDados.ger["Nome"]
+                    nome = self.bancoDados.gerentes[cod]["Nome"]
                     print(f"Login com Sucesso! Seja bem vindo {nome}")
+                    return self.bancoDados.gerentes[cod]
                 else:
                     print("Falha no login! Senha incorreta!")
             else: 
@@ -35,9 +45,9 @@ Resposta: """)
             senha = input("Senha: ")
             if (cod in self.bancoDados.clientes) == True:
                 if (senha in self.bancoDados.clientes[cod]["Senha"]) == True:
-                    self.bancoDados.cli = self.bancoDados.clientes[cod]
-                    nome = self.bancoDados.cli["Nome"]
+                    nome = self.bancoDados.clientes[cod]["Nome"]
                     print(f"Login com Sucesso! Seja bem vindo {nome}")
+                    return self.bancoDados.clientes[cod]
                 else:
                     print("Falha no login! Senha incorreta!")
             else: 
@@ -50,7 +60,6 @@ Resposta: """)
 class BancoDeDados:
 
 # Função construtora para pegar a base de dados nos arquivos ".json" e tranformar em dict no codigo
-# "Self.hist", "self.cli" e "self.ger" são objetos temporários para receber o cliente recém-logado
 
     def __init__(self):
         with open("Gerentes.json") as GeFile:
@@ -59,9 +68,6 @@ class BancoDeDados:
             self.clientes = json.load(CliFile)
         with open("Historico.json") as HistFile:
             self.historico = json.load(HistFile)
-        self.hist = {}
-        self.cli = {}
-        self.ger = {}
 
     def armazena_dados(self):
         pass
@@ -72,18 +78,19 @@ class BancoDeDados:
 
 class Usuario:
     
-    def __init__(self, nome, endereco, telefone, senha, codigo):
+    def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
         self.nome = nome
         self.endereco = endereco
         self.telefone = telefone
         self.senha = senha
         self.codigo = codigo
+        self.tipo = tipo
 
 class Gerente(Usuario):
     
-    def __init__(self, nome, endereco, telefone, senha, codigo):
-        super().__init__(nome, endereco, telefone, senha)
-
+    def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
+        super().__init__(nome, endereco, telefone, senha, codigo, tipo)
+    
     def cadastrar_user(self, clientes, tipo, nome, endereco, telefone, senha, codigo, cpf_cnpj, saldo):
         novo_cliente = {"Tipo" : tipo, "Nome" : nome, "Endereco" : endereco, "Telefone" : telefone, "Senha" : senha, "CPF/CNPJ" : cpf_cnpj, "Saldo" : saldo}
         clientes.update({codigo : novo_cliente})
@@ -124,8 +131,8 @@ class Gerente(Usuario):
             print ("\n\n")
 
 class Cliente(Usuario):
-    def __init__(self, saldo, nome, endereco, telefone, senha, codigo):
-        super().__init__(nome, endereco, telefone, senha, codigo)
+    def __init__(self, saldo, nome, endereco, telefone, senha, codigo, tipo):
+        super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
     def sacar(self):
@@ -142,16 +149,16 @@ class Cliente(Usuario):
     
     
 class Empresa(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj):
-        super().__init__(saldo, nome, endereco, telefone, senha)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, tipo):
+        super().__init__(saldo, nome, endereco, telefone, senha, tipo)
         self.cnpj = cnpj
 
     def solicitar_credito(self):
         pass
     
 class PessoaFisica(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cpf):
-        super().__init__(saldo, nome, endereco, telefone, senha)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo):
+        super().__init__(saldo, nome, endereco, telefone, senha, tipo)
         self.cpf = cpf
 
     def solicitar_credito(self):

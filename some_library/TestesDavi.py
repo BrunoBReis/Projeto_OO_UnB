@@ -46,5 +46,5 @@ def visualiza_user(clientes):
 
 start = SistemaBancario()
 
-start.login()
-print(start.bancoDados.ger)
+#while True:
+print(start.user.nome)
