@@ -1,27 +1,5 @@
 from atm import *
 
-class DataBank_Gerente():
-
-    def get_data (self, name = "Gerentes.json"):
-        with open(name) as arquivo:
-            gerentes = json.load(arquivo)
-        print (gerentes)
-
-class DataBank_Clientes():
-
-    def get_data (self, name = "Clientes.json"):
-        with open(name) as arquivo:
-            clientes = json.load(arquivo)
-        print (clientes)
-
-class DataBank_Historico():
-
-    def get_data (self, name = "Historico.json"):
-        with open(name) as arquivo:
-            historico = json.load(arquivo)
-        print (historico)
-
-
 def cadastrar_user(clientes, tipo, nome, endereco, telefone, senha, codigo, cpf_cnpj, saldo):
     novo_cliente = {"Tipo" : tipo, "Nome" : nome, "Endereco" : endereco, "Telefone" : telefone, "Senha" : senha, "CPF/CNPJ" : cpf_cnpj, "Saldo" : saldo}
     clientes.update({codigo : novo_cliente})
