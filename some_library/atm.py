@@ -109,6 +109,9 @@ class Cliente(Usuario):
     def depositar(self):
         pass
 
+    # sugestão do professor foi fazer uma implentação disso no json como um pagamento
+    # que está agendado e posteriormente confirmar essa data com algum bibloteca 
+    # depois relizar o pagamento automaticamente
     def pagamento_programado(self):
         pass
     
@@ -121,6 +124,8 @@ class Empresa(Cliente):
         super().__init__(saldo, nome, endereco, telefone, senha, codigo)
         self.cnpj = cnpj
 
+# a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
+# para ser pago em uma certa data
     def solicitar_credito(self):
         pass
     
