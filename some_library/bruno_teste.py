@@ -135,19 +135,26 @@ class Cliente(Usuario):
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
+    # saque com apenas uma verificação para não fica em dívida
+    # posteriormente será necessário fazer um método de limite
+
     def sacar(self, valor):
         if self.saldo >= valor:
             self.saldo -= valor
-            print(f'Você sacou {valor} reais da sua conta')
+            print(f'Você sacou {valor} reais da sua conta.')
         else:
-            print(f'{self.nome} saldo insuficiente')
-    
-    def depositar(self):
-        pass
+            print(f'{self.nome} saldo insuficiente.')
+
+    #deposito sem nenhuma verificação, apenas adicionando o valor escolhido
+
+    def depositar(self, valor):
+        self.saldo += valor
+        print(f'Você depositou {valor} na sua conta.')
 
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
     # depois relizar o pagamento automaticamente
+
     def pagamento_programado(self):
         pass
     
