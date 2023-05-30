@@ -75,7 +75,7 @@ class BancoDeDados:
     def busca_dados(self):
         pass
         
-
+# na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
     
     def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
@@ -135,12 +135,19 @@ class Cliente(Usuario):
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
-    def sacar(self):
-        pass
+    def sacar(self, valor):
+        if self.saldo >= valor:
+            self.saldo -= valor
+            print(f'Você sacou {valor} reais da sua conta')
+        else:
+            print(f'{self.nome} saldo insuficiente')
     
     def depositar(self):
         pass
 
+    # sugestão do professor foi fazer uma implentação disso no json como um pagamento
+    # que está agendado e posteriormente confirmar essa data com algum bibloteca 
+    # depois relizar o pagamento automaticamente
     def pagamento_programado(self):
         pass
     
@@ -149,16 +156,18 @@ class Cliente(Usuario):
     
     
 class Empresa(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, tipo):
-        super().__init__(saldo, nome, endereco, telefone, senha, tipo)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, tipo, codigo):
+        super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)
         self.cnpj = cnpj
 
+# a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
+# para ser pago em uma certa data
     def solicitar_credito(self):
         pass
     
 class PessoaFisica(Cliente):
-    def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo):
-        super().__init__(saldo, nome, endereco, telefone, senha, tipo)
+    def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo, codigo):
+        super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)
         self.cpf = cpf
 
     def solicitar_credito(self):
