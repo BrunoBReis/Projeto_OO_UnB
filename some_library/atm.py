@@ -1,9 +1,14 @@
 import json
 
 class SistemaBancario:
+
+# Criando uma composição da classe "BancoDeDados" em "SistemaBancario"
+
     def __init__(self):
         self.bancoDados = BancoDeDados()
     
+# Função para reconhecer código da conta e senha para logar como "Gerente" ou "Cliente"
+
     def login(self):
         print("""Escolha uma das opções abaixo:
 1) Gerente
@@ -43,6 +48,9 @@ Resposta: """)
         pass
 
 class BancoDeDados:
+
+# Função construtora para pegar a base de dados nos arquivos ".json" e tranformar em dict no codigo
+# "Self.hist", "self.cli" e "self.ger" são objetos temporários para receber o cliente recém-logado
 
     def __init__(self):
         with open("Gerentes.json") as GeFile:
