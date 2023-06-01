@@ -12,12 +12,6 @@ class BancoDeDados:
         with open("Historico.json") as HistFile:
             self.historico = json.load(HistFile)
 
-    def armazena_dados(self):
-        pass
-
-    def busca_dados(self):
-        pass
-        
 # na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
     
@@ -41,7 +35,7 @@ class Gerente(Usuario):
             json.dump(clientes, arquivo, indent=4)
     
     def remover_user(self, clientes, codigo):
-        clientes.pop(codigo, "ok")
+        clientes.pop(codigo, "Cliente não existe")
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
     

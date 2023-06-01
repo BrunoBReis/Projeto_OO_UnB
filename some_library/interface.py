@@ -42,15 +42,39 @@ class Funcoes():
         else: 
             return "Falha no login, conta inexistente!"
         
+
+    def faz_titulo(self, titulo):
+
+        self.fr_titulo_pag = Frame(self.frame1, bg="#50C649", highlightbackground= "#50C649", highlightthickness=1.5)
+        self.fr_titulo_pag.place(relx= 0.5, rely= 0.04, relwidth= 0.20, relheight= 0.1, anchor=CENTER)
+        self.login = Label(self.fr_titulo_pag, text = titulo, foreground="#1C1C1C", background="#50C649", font=self.tela_fonte)
+        self.login.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    def faz_cabecalho(self):
+        self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Log Out", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+        self.bt_log_out.place(relx=0.90, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
+
+        self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+        self.bt_log_out.place(relx=0.70, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
+
+        self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+        self.bt_log_out.place(relx=0.30, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
+
+        self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+        self.bt_log_out.place(relx=0.10, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
+
+        
                 
         
 # Classe da interface =)
-
 class SistemaBancario(Funcoes):
     def __init__(self, master=None):
 
 # Fazendo as compsições ou criando variáveis que vão ser necessárias
-
         self.bancoDados = BancoDeDados()
         self.hist = {}
         self.usuario = {}
@@ -58,24 +82,24 @@ class SistemaBancario(Funcoes):
         self.senha = ""
 
 # Definindo estilo, tamanho e tipo de fonte padrão pra interface (não necessariamente tudo vai ser assim)
-
         self.tela_fonte = ("Terminal", "16", "bold")
 
 # Construindo a interface inicial
-
         self.root = root
         self.interface_basica()
-        self.frames_da_tela()
+
+        self.frame1 = Frame(self.root, bd = 4, bg="#1C1C1C", highlightbackground= "#4D4D4D", highlightthickness=6)
+        self.frame1.place(relx= 0.03, rely= 0.03, relwidth= 0.94, relheight= 0.50)
+
         self.tela_inicial()
         self.criando_botoes()
         root.mainloop()
 
-# Função para construção da página de login
 
+# Função para construção da página de login
     def tela_login(self, aviso):
         self.limpa_tela(self.frame1)
-        self.login = Label(self.frame1, text = "LOGIN", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
-        self.login.place(relx=0.5, rely=0.04, anchor=CENTER)
+        self.faz_titulo("LOGIN")
 
         self.t_aviso = Label(self.frame1, text = aviso, foreground="#50C649", background="#1C1C1C", font=("Terminal", "10", "bold"))
         self.t_aviso.place(relx=0.5, rely=0.30, anchor=CENTER)
@@ -106,9 +130,8 @@ class SistemaBancario(Funcoes):
     def tela_usuario(self):
         aviso = self.logar()
 
-        self.bt_log_out = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Log Out", 
-                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_inicial())
-        self.bt_log_out.place(relx=0.91, rely=0.04, relwidth=0.19, relheight=0.1, anchor=CENTER)
+        self.faz_cabecalho()
+        self.frames_menu_de_usuário()
 
         if self.usuario == {}:
             self.tela_login(aviso)
@@ -120,14 +143,12 @@ class SistemaBancario(Funcoes):
             else:
                 self.user = PessoaFisica(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"], self.cod)
                 
-            self.t_cliente = Label(self.frame1, text = "CLIENTE", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
-            self.t_cliente.place(relx=0.5, rely=0.04, anchor=CENTER)  
+            self.faz_titulo("CLIENTE") 
 
         elif self.usuario["Tipo"] == "Gerente":
                 self.user = Gerente(self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], "000100", self.usuario["Tipo"])   
                 
-                self.t_gerente = Label(self.frame1, text = "GERENTE", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
-                self.t_gerente.place(relx=0.5, rely=0.04, anchor=CENTER)
+                self.faz_titulo("GERENTE")
             
 # Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
 
@@ -137,20 +158,13 @@ class SistemaBancario(Funcoes):
         self.root.geometry("700x700")
         self.root.resizable(False, False)
 
-# Criação do frame da tela "digital"
-
-    def frames_da_tela(self):
-        self.frame1 = Frame(self.root, bd = 4, bg="#1C1C1C", highlightbackground= "#4D4D4D", highlightthickness=6)
-        self.frame1.place(relx= 0.03, rely= 0.03, relwidth= 0.94, relheight= 0.50)
-
 # Função constroi a tela inicial de quando ligamos o prgrama
 
     def tela_inicial(self):
 
         self.limpa_tela(self.frame1)
 
-        self.menu = Label(self.frame1, text = "  MENU  ", foreground="#50C649", background="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, font=self.tela_fonte)
-        self.menu.place(relx=0.5, rely=0.04, anchor=CENTER)
+        self.faz_titulo("MENU")
 
 
         self.botao_login = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Login", 
@@ -161,6 +175,20 @@ class SistemaBancario(Funcoes):
         self.botao_sair = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Sair", 
                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=self.root.quit)
         self.botao_sair.place(relx=0.5, rely=0.54, relwidth=0.4, relheight=0.1, anchor=CENTER)
+
+# Função para padronizar frames do menu de usuários
+
+    def frames_menu_de_usuário(self):
+
+        self.fr_info_conta = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_info_conta.place(relx= 0.02, rely= 0.13, relwidth= 0.7, relheight= 0.35)
+
+        self.fr_acoes = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_acoes.place(relx= 0.02, rely= 0.5, relwidth= 0.7, relheight= 0.5)
+
+        self.fr_lista = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_lista.place(relx= 0.73, rely= 0.13, relwidth= 0.27, relheight= 0.8)
+
 
 # Função para criar todos os botões de nosso Caixa Eletrônico principal
     
