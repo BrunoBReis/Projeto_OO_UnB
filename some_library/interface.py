@@ -61,28 +61,64 @@ class Funcoes():
     
     def mostra_funcoes_gerente(self):
         self.bt_cadastra = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar novo cliente", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_cadastra_cli())
         self.bt_cadastra.place(relx=0, rely=0, relwidth=1, relheight=0.25)
 
         self.bt_remover = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Remover cliente", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.select_del())
         self.bt_remover.place(relx=0, rely=0.25, relwidth=1, relheight=0.25)
 
         self.bt_editar = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar conta", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.select_edit())
         self.bt_editar.place(relx=0, rely=0.5, relwidth=1, relheight=0.25)
 
         self.bt_visualiza = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Visualizar conta", 
                                   font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.select_view())
         self.bt_visualiza.place(relx=0, rely=0.75, relwidth=1, relheight=0.25)
 
+    def select_edit(self):
+        selecao = self.lista_gerente.curselection()
+        if selecao == ():
+            self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
+        else:
+            res = self.lista_gerente.get(selecao)
+            self.tela_edita_cli(res)
+
+    def select_del(self):
+        selecao = self.lista_gerente.curselection()
+        if selecao == ():
+            self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
+        else:
+            res = self.lista_gerente.get(selecao)
+            self.tela_remove_cli(res)
+    
     def select_view(self):
         selecao = self.lista_gerente.curselection()
         if selecao == ():
-            self.tela_usuario("ERROR! Falta selecionar o cliente!")
+            self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
         else:
             res = self.lista_gerente.get(selecao)
             self.tela_visualiza_cli(res)
+        
+    def verifica_se_pode_del(self, cod):
+        if self.bancoDados.clientes[cod]["Saldo"] == 0:
+            self.user.remover_user(self.bancoDados.clientes, cod)
+            self.tela_usuario("")
+        else:
+            self.tela_usuario("")
+            self.mostra_aviso(f"ERROR! Usuário não pode deletar a conta {cod}\n enquanto ela não estiver ZERADA")
+        
+    
+    def mostra_aviso(self, aviso):
+        self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_aviso_select.place(relx= 0.5, rely= 0.5, relwidth= 0.8, relheight= 0.4, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_aviso_select, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.15, relwidth=0.1, relheight=0.3, anchor=CENTER)
+
+        self.l_aviso = Label(self.tela_aviso_select, text = aviso, foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_aviso.place(relx=0.5, rely=0.5, anchor=CENTER)
     
     def mostra_dados_gerente(self):
         self.l_admin = Label(self.fr_info_conta, text = "ADMINISTRADOR", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
@@ -107,15 +143,15 @@ class Funcoes():
         self.bt_log_out.place(relx=0.90, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.70, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.30, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.10, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         
@@ -207,8 +243,37 @@ class SistemaBancario(Funcoes):
     def tela_cadastra_cli(self):
         pass
 
-    def tela_remover_cli(self):
-        pass
+    def tela_remove_cli(self, cod):
+        self.tela_deleta = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_deleta.place(relx= 0.5, rely= 0.5, relwidth= 0.6, relheight= 0.8, anchor=CENTER)
+
+        self.l_confirma_del = Label(self.tela_deleta, text = "Você tem certeza que quer deletar\n essa conta?", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_confirma_del.place(relx=0.5, rely=0.1, anchor=CENTER)
+    
+        self.l_nome_cli = Label(self.tela_deleta, text = "Nome :", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nome_cli.place(relx=0.03, rely=0.25)
+        self.l_nomereal_cli = Label(self.tela_deleta, text = self.bancoDados.clientes[cod]["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nomereal_cli.place(relx=0.25, rely=0.25)
+
+        self.l_cod_cli = Label(self.tela_deleta, text = "Cód. :", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cod_cli.place(relx=0.03, rely=0.4)
+        self.l_codreal_cli = Label(self.tela_deleta, text = cod, foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_codreal_cli.place(relx=0.25, rely=0.40)
+
+        self.l_sal_cli = Label(self.tela_deleta, text = "Saldo:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sal_cli.place(relx=0.03, rely=0.55)
+        self.l_salreal_cli = Label(self.tela_deleta, text = "R$" + str(self.bancoDados.clientes[cod]["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_salreal_cli.place(relx=0.25, rely=0.55)
+        
+        self.botao_x = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cancelar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.3, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.verifica_se_pode_del(cod))
+        self.botao_x.place(relx=0.7, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
+
+        
 
     def tela_edita_cli(self):
         pass
@@ -245,12 +310,25 @@ class SistemaBancario(Funcoes):
         self.l_sal_cli = Label(self.tela_visualiza, text = "Saldo: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
         self.l_sal_cli.place(relx=0.03, rely=0.53)
         self.l_salreal_cli = Label(self.tela_visualiza, text = "R$ " + str(self.bancoDados.clientes[cod]["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
-        self.l_salreal_cli.place(relx=0.23, rely=0.70)
+        self.l_salreal_cli.place(relx=0.03, rely=0.70)
 
-        if cod == "":
-            print("Você esqueceu de selecionar a conta!")
-            self.tela_visualiza.destroy()
             
+    def tela_confirma_senha(self, cod):
+
+        self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_aviso_select.place(relx= 0.5, rely= 0.3, relwidth= 0.5, relheight= 0.5, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_aviso_select, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.15, relwidth=0.1, relheight=0.3, anchor=CENTER)
+
+        self.en_confirma_senha = Entry(self.tela_aviso_select, text = "Senha", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.en_confirma_senha.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        self.botao_confirma = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.verifica_se_pode_del(cod))
+        self.botao_confirma.place(relx=0.5, rely=0.85, relwidth=0.5, relheight=0.1, anchor=CENTER)
+
 # Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
 
     def interface_basica(self):
