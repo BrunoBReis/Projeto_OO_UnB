@@ -19,6 +19,7 @@ class Funcoes():
 #Função para fazer a confirmação dos dados e permitir o programa avançar para a próxima tela
 
     def logar(self):
+        self.usuario = {}
         self.cod = self.en_conta.get()
         self.senha = self.en_senha.get()
         if (self.cod in self.bancoDados.gerentes) == True:
@@ -27,22 +28,72 @@ class Funcoes():
                 print(f"Login com Sucesso! Seja bem vindo {nome}")
                 self.limpa_tela(self.frame1)
                 self.usuario =  self.bancoDados.gerentes[self.cod]
-                return ""
+                self.tela_usuario("")
             else:
-                return "Falha no login! Senha incorreta!"
+                self.tela_usuario ("Falha no login! Senha incorreta!")
         elif (self.cod in self.bancoDados.clientes) == True:
             if (self.senha == self.bancoDados.clientes[self.cod]["Senha"]) == True:
                 nome = self.bancoDados.clientes[self.cod]["Nome"]
                 print(f"Login com Sucesso! Seja bem vindo {nome}")
                 self.limpa_tela(self.frame1)
                 self.usuario = self.bancoDados.clientes[self.cod]
-                return ""
+                self.tela_usuario("")
             else:
-                return "Falha no login! Senha incorreta!"
+                self.tela_usuario("Falha no login! Senha incorreta!")
         else: 
-            return "Falha no login, conta inexistente!"
+            self.tela_usuario("Falha no login! Conta inesxistente!")
         
 
+    def mostra_lista_gerente(self):
+        self.l_cliente_lista = Label(self.fr_lista, text = "Clientes", foreground="#50C649", background="#1C1C1C", font= ("Terminal", "12", "bold"))
+        self.l_cliente_lista.place(relx=0.5, rely=0.1, anchor=CENTER)
+        
+        self.scrollbar_lista = Scrollbar(self.fr_lista, bg="#1C1C1C", troughcolor="#50C649", activebackground="#000000")
+        self.scrollbar_lista.place(relx=0.9, rely=0.2, relwidth=0.1, relheight=0.8)
+
+        self.lista_gerente = Listbox(self.fr_lista, bg="#1C1C1C", foreground="#50C649", highlightbackground="#50C649",
+                                     selectbackground="#50C649", selectforeground="#1C1C1C", font=("Terminal", "10"), yscrollcommand= self.scrollbar_lista.set)
+        for cod in self.bancoDados.clientes:
+            self.lista_gerente.insert(END, cod)
+        self.lista_gerente.place(relx=0.0, rely= 0.2, relwidth=0.9, relheight=0.8)
+        self.scrollbar_lista.config(command= self.lista_gerente.yview)
+        
+    
+    def mostra_funcoes_gerente(self):
+        self.bt_cadastra = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar novo cliente", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+        self.bt_cadastra.place(relx=0, rely=0, relwidth=1, relheight=0.25)
+
+        self.bt_remover = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Remover cliente", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+        self.bt_remover.place(relx=0, rely=0.25, relwidth=1, relheight=0.25)
+
+        self.bt_editar = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar conta", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
+        self.bt_editar.place(relx=0, rely=0.5, relwidth=1, relheight=0.25)
+
+        self.bt_visualiza = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Visualizar conta", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.select_view())
+        self.bt_visualiza.place(relx=0, rely=0.75, relwidth=1, relheight=0.25)
+
+    def select_view(self):
+        selecao = self.lista_gerente.curselection()
+        if selecao == ():
+            self.tela_usuario("ERROR! Falta selecionar o cliente!")
+        else:
+            res = self.lista_gerente.get(selecao)
+            self.tela_visualiza_cli(res)
+    
+    def mostra_dados_gerente(self):
+        self.l_admin = Label(self.fr_info_conta, text = "ADMINISTRADOR", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_admin.place(relx=0.02, rely=0.01)
+        
+        self.l_nome_gerente = Label(self.fr_info_conta, text = self.usuario["Nome"], foreground="#50C649", background="#1C1C1C", font=("Terminal", "12", "bold"))
+        self.l_nome_gerente.place(relx=0.02, rely=0.4)
+
+        self.l_codigo_conta = Label(self.fr_info_conta, text = self.cod, foreground="#50C649", background="#1C1C1C", font=("Terminal", "12", "bold"))
+        self.l_codigo_conta.place(relx=0.02, rely=0.7)
+    
     def faz_titulo(self, titulo):
 
         self.fr_titulo_pag = Frame(self.frame1, bg="#50C649", highlightbackground= "#50C649", highlightthickness=1.5)
@@ -56,15 +107,15 @@ class Funcoes():
         self.bt_log_out.place(relx=0.90, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.70, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.30, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.10, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
         
@@ -83,6 +134,7 @@ class SistemaBancario(Funcoes):
 
 # Definindo estilo, tamanho e tipo de fonte padrão pra interface (não necessariamente tudo vai ser assim)
         self.tela_fonte = ("Terminal", "16", "bold")
+        self.tela_fontinha = ("Terminal", "12", "bold")
 
 # Construindo a interface inicial
         self.root = root
@@ -115,7 +167,7 @@ class SistemaBancario(Funcoes):
         self.en_senha.place(relx=0.55, rely=0.56, relwidth=0.7, relheight=0.1, anchor=CENTER)
 
         self.bt_logar = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Logar", 
-                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_usuario())
+                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.logar())
         self.bt_logar.place(relx=0.5, rely=0.7, relwidth=0.4, relheight=0.1, anchor=CENTER)
 
         self.bt_voltar = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Voltar", 
@@ -127,9 +179,9 @@ class SistemaBancario(Funcoes):
 # Tive que fazer uma gambiarra e essa função também faz parte de confirmar se os dados 
 # estão coerentes e gerar a pagina correspondente para o devido tipo de usuário ("Gerente" ou "Cliente")
 
-    def tela_usuario(self):
-        aviso = self.logar()
+    def tela_usuario(self, aviso):
 
+        self.limpa_tela(self.frame1)
         self.faz_cabecalho()
         self.frames_menu_de_usuário()
 
@@ -147,8 +199,57 @@ class SistemaBancario(Funcoes):
 
         elif self.usuario["Tipo"] == "Gerente":
                 self.user = Gerente(self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], "000100", self.usuario["Tipo"])   
-                
+                self.mostra_dados_gerente()
+                self.mostra_lista_gerente()
+                self.mostra_funcoes_gerente()
                 self.faz_titulo("GERENTE")
+
+    def tela_cadastra_cli(self):
+        pass
+
+    def tela_remover_cli(self):
+        pass
+
+    def tela_edita_cli(self):
+        pass
+
+    def tela_visualiza_cli(self, cod = ""):
+        
+        self.tela_visualiza = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_visualiza.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_visualiza, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_nome_cli = Label(self.tela_visualiza, text = "Nome: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nome_cli.place(relx=0.03, rely=0.05)
+        self.l_nomereal_cli = Label(self.tela_visualiza, text = self.bancoDados.clientes[cod]["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nomereal_cli.place(relx=0.23, rely=0.05)
+
+        self.l_end_cli = Label(self.tela_visualiza, text = "End: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_end_cli.place(relx=0.03, rely=0.17)
+        self.l_endreal_cli = Label(self.tela_visualiza, text = self.bancoDados.clientes[cod]["Endereco"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_endreal_cli.place(relx=0.23, rely=0.17)
+
+        self.l_tel_cli = Label(self.tela_visualiza, text = "Tel: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_tel_cli.place(relx=0.03, rely=0.29)
+        self.l_telreal_cli = Label(self.tela_visualiza, text = self.bancoDados.clientes[cod]["Telefone"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_telreal_cli.place(relx=0.23, rely=0.29)
+
+        self.l_cpf_cli = Label(self.tela_visualiza, text = "CPF: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cpf_cli.place(relx=0.03, rely=0.41)
+        self.l_cpfreal_cli = Label(self.tela_visualiza, text = self.bancoDados.clientes[cod]["CPF/CNPJ"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cpfreal_cli.place(relx=0.23, rely=0.41)
+
+        self.l_sal_cli = Label(self.tela_visualiza, text = "Saldo: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sal_cli.place(relx=0.03, rely=0.53)
+        self.l_salreal_cli = Label(self.tela_visualiza, text = "R$ " + str(self.bancoDados.clientes[cod]["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_salreal_cli.place(relx=0.23, rely=0.70)
+
+        if cod == "":
+            print("Você esqueceu de selecionar a conta!")
+            self.tela_visualiza.destroy()
             
 # Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
 
@@ -181,13 +282,13 @@ class SistemaBancario(Funcoes):
     def frames_menu_de_usuário(self):
 
         self.fr_info_conta = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_info_conta.place(relx= 0.02, rely= 0.13, relwidth= 0.7, relheight= 0.35)
+        self.fr_info_conta.place(relx= 0.01, rely= 0.12, relwidth= 0.71, relheight= 0.36)
 
         self.fr_acoes = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_acoes.place(relx= 0.02, rely= 0.5, relwidth= 0.7, relheight= 0.5)
+        self.fr_acoes.place(relx= 0.01, rely= 0.5, relwidth= 0.71, relheight= 0.5)
 
         self.fr_lista = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_lista.place(relx= 0.73, rely= 0.13, relwidth= 0.27, relheight= 0.8)
+        self.fr_lista.place(relx= 0.73, rely= 0.12, relwidth= 0.27, relheight= 0.88)
 
 
 # Função para criar todos os botões de nosso Caixa Eletrônico principal
