@@ -77,14 +77,14 @@ class Funcoes():
         
 
     def mostra_lista_gerente(self):
-        self.l_cliente_lista = Label(self.fr_lista, text = "Clientes", foreground="#50C649", background="#1C1C1C", font= ("Terminal", "12", "bold"))
+        self.l_cliente_lista = Label(self.fr_lista, text = "Clientes", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_cliente_lista.place(relx=0.5, rely=0.1, anchor=CENTER)
         
         self.scrollbar_lista = Scrollbar(self.fr_lista, bg="#1C1C1C", troughcolor="#50C649", activebackground="#000000")
         self.scrollbar_lista.place(relx=0.9, rely=0.2, relwidth=0.1, relheight=0.8)
 
         self.lista_gerente = Listbox(self.fr_lista, bg="#1C1C1C", foreground="#50C649", highlightbackground="#50C649",
-                                     selectbackground="#50C649", selectforeground="#1C1C1C", font=("Terminal", "10"), yscrollcommand= self.scrollbar_lista.set)
+                                     selectbackground="#50C649", selectforeground="#1C1C1C", font=("Terminal", "10", "bold"), yscrollcommand= self.scrollbar_lista.set)
         for cod in self.bancoDados.clientes:
             self.lista_gerente.insert(END, cod)
         self.lista_gerente.place(relx=0.0, rely= 0.2, relwidth=0.9, relheight=0.8)
@@ -114,7 +114,7 @@ class Funcoes():
             self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
         else:
             res = self.lista_gerente.get(selecao)
-            self.tela_edita_cli(res)
+            self.tela_1_edita_cli(res)
 
     def select_del(self):
         selecao = self.lista_gerente.curselection()
@@ -139,7 +139,14 @@ class Funcoes():
         else:
             self.tela_usuario("")
             self.mostra_aviso(f"ERROR! Usuário não pode deletar a conta {cod}\n enquanto ela não estiver ZERADA")
-        
+
+    def confere_pode_edit_cli(self, cod, dado, novo_dado):
+        if novo_dado == "":
+            self.limpa_tela(self.tela_edita)
+            self.mostra_aviso("ERROR! Não pode enviar uma mudança vazia!")
+        else: 
+            self.user.editar_user(self.bancoDados.clientes, cod, dado, novo_dado)
+            self.tela_usuario("")    
     
     def mostra_aviso(self, aviso):
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
@@ -279,7 +286,7 @@ class SistemaBancario(Funcoes):
         self.tela_cadastra = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_cadastra.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.9, anchor=CENTER)
 
-        self.l_cadastro_cli = Label(self.tela_cadastra, text = "Cadastro", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_cadastro_cli = Label(self.tela_cadastra, text = "CADASTRO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
         
         self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
@@ -325,7 +332,7 @@ class SistemaBancario(Funcoes):
         self.saldo = self.en_salreal_cli.get()
         self.limpa_tela(self.tela_cadastra)
 
-        self.l_cadastro_cli = Label(self.tela_cadastra, text = "Cadastro", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_cadastro_cli = Label(self.tela_cadastra, text = "CADASTRO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
         
         self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
@@ -390,8 +397,76 @@ class SistemaBancario(Funcoes):
 
         
 
-    def tela_edita_cli(self):
-        pass
+    def tela_1_edita_cli(self, cod = ""):
+        
+        self.tela_edita = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_edita.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.l_edicao_cli = Label(self.tela_edita, text = "EDIÇÃO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_edicao_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_nome_cli = Label(self.tela_edita, text = "Nome :", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nome_cli.place(relx=0.03, rely=0.17)
+        self.l_nomereal_cli = Label(self.tela_edita, text = self.bancoDados.clientes[cod]["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nomereal_cli.place(relx=0.27, rely=0.17)
+        self.bt_edita_nome = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_edita_cli("Nome", cod))
+        self.bt_edita_nome.place(relx=0.5, rely=0.32, relwidth=0.3, relheight=0.09, anchor=CENTER)
+
+        self.l_end_cli = Label(self.tela_edita, text = "End. :", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_end_cli.place(relx=0.03, rely=0.37)
+        self.l_endreal_cli = Label(self.tela_edita, text = self.bancoDados.clientes[cod]["Endereco"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_endreal_cli.place(relx=0.27, rely=0.37)
+        self.bt_edita_end = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_edita_cli("Endereco", cod))
+        self.bt_edita_end.place(relx=0.5, rely=0.52, relwidth=0.3, relheight=0.09, anchor=CENTER)
+
+        self.l_tel_cli = Label(self.tela_edita, text = "Tel. :", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_tel_cli.place(relx=0.03, rely=0.57)
+        self.l_telreal_cli = Label(self.tela_edita, text = self.bancoDados.clientes[cod]["Telefone"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_telreal_cli.place(relx=0.27, rely=0.57)
+        self.bt_edita_tel = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_edita_cli("Telefone", cod))
+        self.bt_edita_tel.place(relx=0.5, rely=0.72, relwidth=0.3, relheight=0.09, anchor=CENTER)
+
+        self.l_sen_cli = Label(self.tela_edita, text = "Senha:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sen_cli.place(relx=0.03, rely=0.77)
+        self.l_senreal_cli = Label(self.tela_edita, text = self.bancoDados.clientes[cod]["Senha"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_senreal_cli.place(relx=0.27, rely=0.77)
+        self.bt_edita_sen = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_edita_cli("Senha", cod))
+        self.bt_edita_sen.place(relx=0.5, rely=0.92, relwidth=0.3, relheight=0.09, anchor=CENTER)
+
+    
+    def tela_2_edita_cli(self, escolha, cod):
+        self.tela_edita = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_edita.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.l_edicao_cli = Label(self.tela_edita, text = "EDIÇÃO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_edicao_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_escolha_cli = Label(self.tela_edita, text = escolha + ":", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_escolha_cli.place(relx=0.03, rely=0.19)
+        self.l_escolhareal_cli = Label(self.tela_edita, text = self.bancoDados.clientes[cod][escolha], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_escolhareal_cli.place(relx=0.5, rely=0.35, anchor=CENTER)
+
+        self.l_nova_esc_cli = Label(self.tela_edita, text = "Novo " + escolha + ":", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_nova_esc_cli.place(relx=0.03, rely=0.46)
+        self.en_nova_esc_cli = Entry(self.tela_edita, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_nova_esc_cli.place(relx=0.125, rely=0.60, relwidth=0.75)
+
+        self.bt_confirmar = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_edit_cli(cod, escolha, self.en_nova_esc_cli.get()))
+        self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
+
 
     def tela_visualiza_cli(self, cod = ""):
         

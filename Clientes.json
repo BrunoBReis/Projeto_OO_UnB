@@ -26,15 +26,6 @@
         "CPF/CNPJ": "734487123.55",
         "Saldo": 275.0
     },
-    "6237.0-16": {
-        "Tipo": "Pessoa",
-        "Nome": "Marcos Selim Damasco",
-        "Endereco": "Blue Fit",
-        "Telefone": "9999-9999",
-        "Senha": "~Afphqi&",
-        "CPF/CNPJ": "874328432-00",
-        "Saldo": 0.0
-    },
     "3563.0-12": {
         "Tipo": "Pessoa",
         "Nome": "Benedito Ali Bermin",
@@ -49,8 +40,17 @@
         "Nome": "Amazon",
         "Endereco": "Vidigal",
         "Telefone": "8000-1234",
-        "Senha": "1`Y$r-SZ",
+        "Senha": "SempreAlem123",
         "CPF/CNPJ": "345234592844.22",
         "Saldo": 100000.0
+    },
+    "1262.0-60": {
+        "Tipo": "Pessoa",
+        "Nome": "Nevil Longbottom",
+        "Endereco": "Expresso do amanh\u00e3",
+        "Telefone": "99133-9938",
+        "Senha": "senha",
+        "CPF/CNPJ": "123854888-00",
+        "Saldo": 123.45
     }
 }
