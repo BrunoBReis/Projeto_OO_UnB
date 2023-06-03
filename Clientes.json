@@ -1,20 +1,56 @@
 {
-    "000184": {
+    "7104.0-16": {
+        "Tipo": "Pessoa",
+        "Nome": "Davi Fonseca R.",
+        "Endereco": "Brasilia, Asa Sul",
+        "Telefone": "8344-5678",
+        "Senha": "GQNVP+wf",
+        "CPF/CNPJ": "783990123-76",
+        "Saldo": 50.0
+    },
+    "4167.1-46": {
         "Tipo": "Empresa",
         "Nome": "Apple",
-        "Endereco": "jbfahsdbjv",
-        "Telefone": "8000-3420",
-        "Senha": "apple2000",
-        "CPF/CNPJ": "20-2394889898.38",
-        "Saldo": 25000.0
+        "Endereco": "Abadiania Sul",
+        "Telefone": "8000-3432",
+        "Senha": "0DJ2qI,;",
+        "CPF/CNPJ": "32498234.432",
+        "Saldo": 50000.0
     },
-    "100042": {
+    "9727.0-81": {
         "Tipo": "Pessoa",
-        "Nome": "Alberto Alemao",
-        "Endereco": "Abadiania Leste",
-        "Telefone": "8888-6578",
-        "Senha": "senha",
-        "CPF/CNPJ": "78390500012",
-        "Saldo": 599.0
+        "Nome": "Julia Macaroto",
+        "Endereco": "asdfasdf",
+        "Telefone": "3453-3453",
+        "Senha": ";RIpr\"[l",
+        "CPF/CNPJ": "734487123.55",
+        "Saldo": 275.0
+    },
+    "6237.0-16": {
+        "Tipo": "Pessoa",
+        "Nome": "Marcos Selim Damasco",
+        "Endereco": "Blue Fit",
+        "Telefone": "9999-9999",
+        "Senha": "~Afphqi&",
+        "CPF/CNPJ": "874328432-00",
+        "Saldo": 0.0
+    },
+    "3563.0-12": {
+        "Tipo": "Pessoa",
+        "Nome": "Benedito Ali Bermin",
+        "Endereco": "Sul Asa",
+        "Telefone": "0000-0000",
+        "Senha": "&Q$hW:u4",
+        "CPF/CNPJ": "887884821-00",
+        "Saldo": 1200.53
+    },
+    "1302.1-37": {
+        "Tipo": "Empresa",
+        "Nome": "Amazon",
+        "Endereco": "Vidigal",
+        "Telefone": "8000-1234",
+        "Senha": "1`Y$r-SZ",
+        "CPF/CNPJ": "345234592844.22",
+        "Saldo": 100000.0
     }
 }

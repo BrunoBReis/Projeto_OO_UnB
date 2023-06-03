@@ -1,3 +1,5 @@
+import random
+import string
 from tkinter import *
 from some_library.atm import *
 
@@ -15,6 +17,36 @@ class Funcoes():
         
         for widgets in tela.winfo_children():
             widgets.destroy()
+
+
+    def gera_cod_random(self, tipo):
+
+        num = random.randint(1000, 9999)
+        num2 = random.randint(10,99)
+        if tipo == "Pessoa":
+            self.cod_random = str(num) + ".0-" + str(num2)
+        else:
+            self.cod_random = str(num) + ".1-" + str(num2)
+
+        self.l_codreal_cli = Label(self.tela_cadastra, text = self.cod_random,  foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_codreal_cli.place(relx=0.3, rely=0.7)
+
+        self.botao_cadastra = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : [self.user.cadastrar_user(self.bancoDados.clientes, self.tipo.get(), self.nome, self.endereco, self.telefone, self.senha_segura, self.cod_random, self.cpf_cnpj, float(self.saldo)), self.tela_usuario("")])
+        self.botao_cadastra.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
+
+    def gera_sen_random(self):
+        carac = string.ascii_letters + string.digits + string.punctuation
+        self.senha_segura = ""
+        for i in range(8):
+            self.senha_segura += random.choice(carac)
+
+        self.l_senreal_cli = Label(self.tela_cadastra, text = self.senha_segura, foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_senreal_cli.place(relx=0.25, rely=0.25)
+
+
+
+
 
 #Função para fazer a confirmação dos dados e permitir o programa avançar para a próxima tela
 
@@ -61,7 +93,7 @@ class Funcoes():
     
     def mostra_funcoes_gerente(self):
         self.bt_cadastra = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar novo cliente", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_cadastra_cli())
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
         self.bt_cadastra.place(relx=0, rely=0, relwidth=1, relheight=0.25)
 
         self.bt_remover = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Remover cliente", 
@@ -240,9 +272,92 @@ class SistemaBancario(Funcoes):
                 self.mostra_funcoes_gerente()
                 self.faz_titulo("GERENTE")
 
-    def tela_cadastra_cli(self):
-        pass
+    
+    
+    def tela_1_cadastra_cli(self):
 
+        self.tela_cadastra = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_cadastra.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.9, anchor=CENTER)
+
+        self.l_cadastro_cli = Label(self.tela_cadastra, text = "Cadastro", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
+        
+        self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_nome_cli = Label(self.tela_cadastra, text = "Nome: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nome_cli.place(relx=0.03, rely=0.15)
+        self.en_nomereal_cli = Entry(self.tela_cadastra, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_nomereal_cli.place(relx=0.23, rely=0.15, relwidth=0.75)
+
+        self.l_end_cli = Label(self.tela_cadastra, text = "End.:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_end_cli.place(relx=0.03, rely=0.3)
+        self.en_endreal_cli = Entry(self.tela_cadastra, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_endreal_cli.place(relx=0.23, rely=0.3, relwidth=0.75)
+
+        self.l_tel_cli = Label(self.tela_cadastra, text = "Tel.:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_tel_cli.place(relx=0.03, rely=0.45)
+        self.en_telreal_cli = Entry(self.tela_cadastra, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_telreal_cli.place(relx=0.23, rely=0.45, relwidth=0.75)
+
+        self.l_cpf_cli = Label(self.tela_cadastra, text = "CPF/CNPJ: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cpf_cli.place(relx=0.03, rely=0.60)
+        self.en_cpfreal_cli = Entry(self.tela_cadastra, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_cpfreal_cli.place(relx=0.35, rely=0.60, relwidth=0.63)
+
+        self.l_sal_cli = Label(self.tela_cadastra, text = "Saldo: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sal_cli.place(relx=0.03, rely=0.75)
+        self.en_salreal_cli = Entry(self.tela_cadastra, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_salreal_cli.place(relx=0.25, rely=0.75, relwidth=0.73)
+
+        self.botao_continua = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Continuar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_cadastra_cliente())
+        self.botao_continua.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
+
+    
+    def tela_2_cadastra_cliente(self):
+        
+        self.nome = self.en_nomereal_cli.get()
+        self.endereco = self.en_endreal_cli.get()
+        self.telefone = self.en_telreal_cli.get()
+        self.cpf_cnpj = self.en_cpfreal_cli.get()
+        self.saldo = self.en_salreal_cli.get()
+        self.limpa_tela(self.tela_cadastra)
+
+        self.l_cadastro_cli = Label(self.tela_cadastra, text = "Cadastro", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
+        
+        self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_sen_cli = Label(self.tela_cadastra, text = "Senha:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sen_cli.place(relx=0.03, rely=0.25)
+
+        self.gera_sen_random()
+        
+        
+        self.l_tip_cli = Label(self.tela_cadastra, text = "Tipo:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_tip_cli.place(relx=0.03, rely=0.4)
+        self.tipo = StringVar()
+        self.rb_pessoa = Radiobutton(self.tela_cadastra, text="Pessoa Física", variable= self.tipo, value="Pessoa", command=lambda : self.gera_cod_random(self.tipo.get()), 
+                                     bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
+        self.rb_pessoa.place (relx=0.3, rely=0.4)
+        self.rb_empresa = Radiobutton(self.tela_cadastra, text="Empresa", variable= self.tipo, value="Empresa", command=lambda : self.gera_cod_random(self.tipo.get()), 
+                                      bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
+        self.rb_empresa.place (relx=0.3, rely=0.55)
+
+
+        self.l_cod_cli = Label(self.tela_cadastra, text = "Cód. : ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cod_cli.place(relx=0.03, rely=0.7)
+
+        self.botao_volta = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Voltar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
+        self.botao_volta.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
+
+    
+    
     def tela_remove_cli(self, cod):
         self.tela_deleta = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_deleta.place(relx= 0.5, rely= 0.5, relwidth= 0.6, relheight= 0.8, anchor=CENTER)
@@ -265,13 +380,13 @@ class SistemaBancario(Funcoes):
         self.l_salreal_cli = Label(self.tela_deleta, text = "R$" + str(self.bancoDados.clientes[cod]["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_salreal_cli.place(relx=0.25, rely=0.55)
         
-        self.botao_x = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cancelar", 
+        self.botao_cancela = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cancelar", 
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
-        self.botao_x.place(relx=0.3, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
+        self.botao_cancela.place(relx=0.3, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
 
-        self.botao_x = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+        self.botao_confirma = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.verifica_se_pode_del(cod))
-        self.botao_x.place(relx=0.7, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
+        self.botao_confirma.place(relx=0.7, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
 
         
 
