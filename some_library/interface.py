@@ -52,7 +52,10 @@ class Funcoes():
 
     def logar(self):
         self.usuario = {}
-        self.cod = self.en_conta.get()
+        num1 = self.en_cod_part_1.get()
+        num2 = self.en_cod_part_2.get()
+        num3 = self.en_cod_part_3.get()
+        self.cod = num1 + "." + num2 + "-" + num3
         self.senha = self.en_senha.get()
         if (self.cod in self.bancoDados.gerentes) == True:
             if (self.senha == self.bancoDados.gerentes[self.cod]["Senha"]) == True:
@@ -233,9 +236,16 @@ class SistemaBancario(Funcoes):
         
         self.t_conta = Label(self.frame1, text = "Conta:", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.t_conta.place(relx=0.12, rely=0.42, anchor=CENTER)
-        self.en_conta = Entry(self.frame1, background="#50C649", highlightbackground="#1C1C1C", font=self.tela_fonte)
-        self.en_conta.place(relx=0.55, rely=0.42, relwidth=0.7, relheight=0.1, anchor=CENTER)
-
+        self.en_cod_part_1 = Entry(self.frame1, background="#50C649", highlightbackground="#1C1C1C", font=self.tela_fonte)
+        self.en_cod_part_1.place(relx=0.275, rely=0.42, relwidth=0.15, relheight=0.1, anchor=CENTER)
+        self.t_ponto = Label(self.frame1, text = ".", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.t_ponto.place(relx=0.365, rely=0.44, anchor=CENTER)
+        self.en_cod_part_2 = Entry(self.frame1, background="#50C649", highlightbackground="#1C1C1C", font=self.tela_fonte)
+        self.en_cod_part_2.place(relx=0.4, rely=0.42, relwidth=0.04, relheight=0.1, anchor=CENTER)
+        self.t_traco = Label(self.frame1, text = "-", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.t_traco.place(relx=0.435, rely=0.42, anchor=CENTER)
+        self.en_cod_part_3 = Entry(self.frame1, background="#50C649", highlightbackground="#1C1C1C", font=self.tela_fonte)
+        self.en_cod_part_3.place(relx=0.485, rely=0.42, relwidth=0.07, relheight=0.1, anchor=CENTER)
         self.t_senha = Label(self.frame1, text = "Senha:", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.t_senha.place(relx=0.12, rely=0.56, anchor=CENTER)
         self.en_senha = Entry(self.frame1, background="#50C649", highlightbackground="#1C1C1C", show="*", font=self.tela_fonte)
