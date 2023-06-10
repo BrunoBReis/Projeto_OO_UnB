@@ -137,9 +137,10 @@ class Cliente(Usuario):
         self.saldo = saldo
 
     def sacar(self, valor):
-        if self.saldo >= valor:
+        if self.valor >= valor:
             self.saldo -= valor
-            print(f'Você sacou {valor} reais da sua conta')
+            with open("Clientes.json", "w") as arquivo:
+                json.dump()
         else:
             print(f'{self.nome} saldo insuficiente')
     
