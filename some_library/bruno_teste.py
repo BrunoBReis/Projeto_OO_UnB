@@ -87,6 +87,10 @@ class Usuario:
         self.codigo = codigo
         self.tipo = tipo
 
+# antes de fazer qualquer operação dentro da conta é necessário autenticar-se
+    def verificacao_login(self, senha):
+        pass
+
 class Gerente(Usuario):
     
     def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
@@ -136,13 +140,10 @@ class Cliente(Usuario):
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
-    def sacar(self, valor):
-        if self.saldo >= valor:
-            self.saldo -= valor
-            print(f'Você sacou {valor} reais da sua conta')
-        else:
-            print(f'{self.nome} saldo insuficiente')
-    
+    def sacar(self, nome, senha):
+        nome = input()
+        senha = input()
+
     def depositar(self):
         pass
 
