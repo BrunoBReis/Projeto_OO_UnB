@@ -1,1 +1,12 @@
-[]
+{
+    "000184": {
+        "15/06/2023": {
+            "Tipo": "pagamento_programado",
+            "Valor": 200
+        },
+        "16/06/2023": {
+            "Tipo": "pagamento_programado",
+            "Valor": 200
+        }
+    }
+}
