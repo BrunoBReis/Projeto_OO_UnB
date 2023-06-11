@@ -1,5 +1,5 @@
 import json
-import datetime
+from datetime import datetime
 
 class SistemaBancario:
 
@@ -155,8 +155,14 @@ class Cliente(Usuario):
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
     # depois relizar o pagamento automaticamente
-    def pagamento_programado(self):
-        pass
+    def pagamento_programado(self, data):
+        data_pagamento = datetime.strptime(data, '%d/%m/%Y')
+        data_atual = datetime.now()
+
+        if data_pagamento > data_atual:
+            print('Data registrada é posterior a data atual')
+        else:
+            print('Data é anterior a data atual')
     
     def visualiar_historico(self):
         with open('Historico.json') as historico_file:

@@ -3,9 +3,10 @@ import json
 
 def workspace():
     # armazenando os caminhos dos dados
-    clientes_directory = '/home/bruno/Documents/Terceiro semestre/OO/projeto4/projetoOO4/Clientes.json'
-    gerentes_directory = '/home/bruno/Documents/Terceiro semestre/OO/projeto4/projetoOO4/Gerentes.json'
-    historico_directory = '/home/bruno/Documents/Terceiro semestre/OO/projeto4/projetoOO4/Historico.json'
+    clientes_directory = 'Clientes.json'
+    gerentes_directory = 'Gerentes.json'
+    historico_directory = 'Historico.json'
+    pagamento_programado_directory = 'Pagamento_programado.json'
 
     # criando um objeto para gerente e pessoa
     gerente = Gerente('Bruno', 'SHIS QL 10 conj 5', '91234-5678', '123', '100012', 'gerente')
@@ -22,12 +23,17 @@ def workspace():
     with open(historico_directory) as historico_file:
         lista_historico = json.load(historico_file)
 
+    with open(pagamento_programado_directory) as pagamento_programado_file:
+        lista_pagamento_programado = json.load(pagamento_programado_file)
+
+
     # fazendo as alterações na conta 
     #pessoa.sacar(100, lista_clientes, '000184')
     #pessoa.depositar(1000, lista_clientes, '000184')
 
     # visualizando o historico
-    pessoa.visualiar_historico()
+
+    pessoa.pagamento_programado('12/06/2023')
     
 if __name__ == '__main__':
     workspace()
