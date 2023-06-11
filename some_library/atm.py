@@ -175,6 +175,7 @@ class Cliente(Usuario):
             print('Pagamento foi agendado com sucesso!')
         else:
             print('Data é anterior a data atual')
+            print('Pagamento programado não realizado')
     
     def visualiar_historico(self):
         with open('Historico.json') as historico_file:
@@ -208,8 +209,12 @@ class Empresa(Cliente):
 
 # a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
 # para ser pago em uma certa data
-    def solicitar_credito(self):
-        pass
+    def solicitar_credito(self, clientes, codigo, valor):
+        if valor < clientes[codigo]['Saldo']:
+            print('Você consegue realizar o crédito')
+        else:
+            print('Com esse valor não possível solicitar crédito')
+
     
 class PessoaFisica(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo, codigo):

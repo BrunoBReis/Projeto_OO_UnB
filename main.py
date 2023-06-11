@@ -11,7 +11,7 @@ def workspace():
     # criando um objeto para gerente e pessoa
     gerente = Gerente('Bruno', 'SHIS QL 10 conj 5', '91234-5678', '123', '100012', 'gerente')
     pessoa = PessoaFisica(1000, 'Joao', 'SQS 202 bloco d', '91234-1234', '1234', '123.456.789-00', 'Pessoa', '000012')
-
+    empresa = Empresa(1000, 'Joao', 'SQS 202 bloco d', '91234-1234', '1234', '123.456.789-00', 'Pessoa', '000012')
 
     # abrindo o banco de dados
     with open(clientes_directory) as clientes_file:
@@ -33,7 +33,9 @@ def workspace():
 
     # visualizando o historico
 
-    pessoa.pagamento_programado('15/06/2023', 200, lista_pagamento_programado, '000184')
-    
+    #pessoa.pagamento_programado('15/06/2023', 200, lista_pagamento_programado, '000184')
+    empresa.solicitar_credito(lista_clientes, '000184', 3500)
+
+
 if __name__ == '__main__':
     workspace()
