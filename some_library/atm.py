@@ -1,63 +1,9 @@
 import json
 import datetime
 
-class SistemaBancario:
-
-# Criando uma composição da classe "BancoDeDados" em "SistemaBancario"
-
-    def __init__(self):
-        self.bancoDados = BancoDeDados()
-        self.hist = {}
-        self.usuario = self.login()
-        if "Saldo" in self.usuario == True:
-            if self.usuario["Tipo"] == "Empresa":
-                self.user = Empresa(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"])
-            else:
-                self.user = PessoaFisica(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"])
-        else:
-                self.user = Gerente(self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], "000100", self.usuario["Tipo"])   
-
-    
-# Função para reconhecer código da conta e senha para logar como "Gerente" ou "Cliente"
-
-    def login(self):
-        while True:
-            print("""Escolha uma das opções abaixo:
-1) Gerente
-2) Cliente
-
-Resposta: """)
-            esco = input(" ")
-            if esco  == "1":
-                print("\n\n GERENTE \n\n")
-                cod = input("Código da conta: ")
-                senha = input("Senha: ")
-                if (cod in self.bancoDados.gerentes) == True:
-                    if (senha == self.bancoDados.gerentes[cod]["Senha"]) == True:
-                        nome = self.bancoDados.gerentes[cod]["Nome"]
-                        print(f"Login com Sucesso! Seja bem vindo {nome}")
-                        return self.bancoDados.gerentes[cod]
-                    else:
-                        print("Falha no login! Senha incorreta!\n\n")
-                else: 
-                    print("Falha no login, conta inexistente!\n\n")
-            else:
-                print("\n\n CLIENTE \n\n")
-                cod = input("Código da conta: ")
-                senha = input("Senha: ")
-                if (cod in self.bancoDados.clientes) == True:
-                    if (senha == self.bancoDados.clientes[cod]["Senha"]) == True:
-                        nome = self.bancoDados.clientes[cod]["Nome"]
-                        print(f"Login com Sucesso! Seja bem vindo {nome}")
-                        return self.bancoDados.clientes[cod]
-                    else:
-                        print("Falha no login! Senha incorreta!\n\n")
-                else: 
-                    print("Falha no login, conta inexistente!\n\n")
-        
-
-    def menu(self):
-        pass
+#---------------------------------------------------------------------------------------
+#------------------CLASSE BANCO DE DADOS-------------------------------------------------------
+#---------------------------------------------------------------------------------------
 
 class BancoDeDados:
 
@@ -71,12 +17,11 @@ class BancoDeDados:
         with open("Historico.json") as HistFile:
             self.historico = json.load(HistFile)
 
-    def armazena_dados(self):
-        pass
 
-    def busca_dados(self):
-        pass
-        
+#---------------------------------------------------------------------------------------
+#------------------CLASSE USUÁRIO-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 # na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
     
@@ -87,6 +32,10 @@ class Usuario:
         self.senha = senha
         self.codigo = codigo
         self.tipo = tipo
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE GERENTE-------------------------------------------------------
+#---------------------------------------------------------------------------------------
 
 class Gerente(Usuario):
     
@@ -100,28 +49,12 @@ class Gerente(Usuario):
             json.dump(clientes, arquivo, indent=4)
     
     def remover_user(self, clientes, codigo):
-        clientes.pop(codigo, "ok")
+        clientes.pop(codigo, "Cliente não existe")
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
     
-    def editar_user(self, clientes, codigo):
-        print ("""O que você quer editar?
-    1)Nome
-    2)Endereco
-    3)Telefone
-    4)Senha
-    5)Sair do modo de edição""")
-        res = input("Resposta: ")
-        if res == "1":
-            clientes[codigo]["Nome"] = input("Novo Nome: ")
-        if res == "2":
-            clientes[codigo]["Endereco"] = input("Novo Endereco: ")
-        if res == "3":
-            clientes[codigo]["Telefone"] = input("Nova Telefone: ")
-        if res == "4":
-            clientes[codigo]["Senha"] = input("Nova Senha: ")
-        else:
-            pass
+    def editar_user(self, clientes, codigo, dado, novo_dado):
+        clientes[codigo][dado] = novo_dado
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
         
@@ -131,6 +64,11 @@ class Gerente(Usuario):
             for item in clientes[conta]:
                 print (f"{item}: {clientes[conta][item]}")
             print ("\n\n")
+
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE CLIENTE-------------------------------------------------------
+#---------------------------------------------------------------------------------------
 
 class Cliente(Usuario):
     def __init__(self, saldo, nome, endereco, telefone, senha, codigo, tipo):
@@ -182,6 +120,11 @@ class Cliente(Usuario):
         
 
     
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE EMPRESA-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
     
 class Empresa(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, tipo, codigo):
@@ -193,6 +136,11 @@ class Empresa(Cliente):
     def solicitar_credito(self):
         pass
     
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE PESSOA FÍSICA-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 class PessoaFisica(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo, codigo):
         super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)

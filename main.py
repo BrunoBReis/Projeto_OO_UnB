@@ -28,6 +28,6 @@ def workspace():
 
     # visualizando o historico
     pessoa.visualiar_historico()
-    
+
 if __name__ == '__main__':
     workspace()
