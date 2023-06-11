@@ -155,12 +155,13 @@ class Cliente(Usuario):
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
     # depois relizar o pagamento automaticamente
-    def pagamento_programado(self, data):
+    def pagamento_programado(self, data, valor, pagamento_programado, codigo):
         data_pagamento = datetime.strptime(data, '%d/%m/%Y')
         data_atual = datetime.now()
 
         if data_pagamento > data_atual:
-            print('Data registrada é posterior a data atual')
+            self.sacar(valor, pagamento_programado, codigo)
+            print('Pagamento foi agendado com sucesso!')
         else:
             print('Data é anterior a data atual')
     
