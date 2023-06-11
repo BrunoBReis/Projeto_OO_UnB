@@ -136,16 +136,19 @@ class Cliente(Usuario):
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
-    def sacar(self, valor):
-        if self.saldo >= valor:
-            self.saldo -= valor
-            print(f'Você sacou {valor} reais da sua conta')
+    def sacar(self, valor, clientes, codigo):
+        if valor <= clientes[codigo]['Saldo']:
+            clientes[codigo]['Saldo'] -= valor
+            with open('Clientes.json', 'w') as clientes_file:
+                json.dump(clientes, clientes_file, indent=4)
         else:
-            print(f'{self.nome} saldo insuficiente')
+            print('Valor maior do que o saldo da conta')
     
-    def depositar(self):
-        pass
-
+    def depositar(self, valor, clientes, codigo):
+        clientes[codigo]['Saldo'] += valor
+        with open('Clientes.json', 'w') as clientes_file:
+            json.dump(clientes, clientes_file, indent=4)
+        
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
     # depois relizar o pagamento automaticamente
