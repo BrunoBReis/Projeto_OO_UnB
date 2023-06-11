@@ -141,6 +141,7 @@ class Cliente(Usuario):
             clientes[codigo]['Saldo'] -= valor
             with open('Clientes.json', 'w') as clientes_file:
                 json.dump(clientes, clientes_file, indent=4)
+            self.registrar_transacao(valor, codigo, tipo_transacao='Saque')
         else:
             print('Valor maior do que o saldo da conta')
     
@@ -148,6 +149,7 @@ class Cliente(Usuario):
         clientes[codigo]['Saldo'] += valor
         with open('Clientes.json', 'w') as clientes_file:
             json.dump(clientes, clientes_file, indent=4)
+        self.registrar_transacao(valor, codigo, tipo_transacao='Deposito')
         
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
@@ -157,6 +159,21 @@ class Cliente(Usuario):
     
     def visualiar_historico(self):
         pass
+
+    def registrar_transacao(self, valor, codigo, tipo_transacao):
+        transacao = {'Codigo' : codigo,
+                     'Tipo' : tipo_transacao,
+                     'Valor' : valor}
+        
+        with open('Historico.json') as historico_file:
+            historico_lista = json.load(historico_file)
+        
+        historico_lista.append(transacao)
+
+        with open('Historico.json', 'w') as historico_update:
+            json.dump(historico_lista, historico_update, indent=4)
+        
+
     
     
 class Empresa(Cliente):
