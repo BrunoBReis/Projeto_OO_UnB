@@ -1,1 +1,12 @@
-{}
+[
+    {
+        "Codigo": "000184",
+        "Tipo": "Saque",
+        "Valor": 100
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Deposito",
+        "Valor": 1000
+    }
+]
