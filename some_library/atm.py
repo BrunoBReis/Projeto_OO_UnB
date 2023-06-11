@@ -158,7 +158,13 @@ class Cliente(Usuario):
         pass
     
     def visualiar_historico(self):
-        pass
+        with open('Historico.json') as historico_file:
+            historico_lista = json.load(historico_file)
+
+        for item in historico_lista:
+            for key, value in item.items():
+                print(f'{key}:\t {value}')
+            print('--------------------')
 
     def registrar_transacao(self, valor, codigo, tipo_transacao):
         transacao = {'Codigo' : codigo,
