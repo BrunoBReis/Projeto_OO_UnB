@@ -1,5 +1,9 @@
 import json
 
+#---------------------------------------------------------------------------------------
+#------------------CLASSE BANCO DE DADOS-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 class BancoDeDados:
 
 # Função construtora para pegar a base de dados nos arquivos ".json" e tranformar em dict no codigo
@@ -12,6 +16,11 @@ class BancoDeDados:
         with open("Historico.json") as HistFile:
             self.historico = json.load(HistFile)
 
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE USUÁRIO-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 # na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
     
@@ -22,6 +31,10 @@ class Usuario:
         self.senha = senha
         self.codigo = codigo
         self.tipo = tipo
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE GERENTE-------------------------------------------------------
+#---------------------------------------------------------------------------------------
 
 class Gerente(Usuario):
     
@@ -51,6 +64,11 @@ class Gerente(Usuario):
                 print (f"{item}: {clientes[conta][item]}")
             print ("\n\n")
 
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE CLIENTE-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 class Cliente(Usuario):
     def __init__(self, saldo, nome, endereco, telefone, senha, codigo, tipo):
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
@@ -75,6 +93,11 @@ class Cliente(Usuario):
     def visualiar_historico(self):
         pass
     
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE EMPRESA-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
     
 class Empresa(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cnpj, tipo, codigo):
@@ -86,6 +109,11 @@ class Empresa(Cliente):
     def solicitar_credito(self):
         pass
     
+
+#---------------------------------------------------------------------------------------
+#------------------CLASSE PESSOA FÍSICA-------------------------------------------------------
+#---------------------------------------------------------------------------------------
+
 class PessoaFisica(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo, codigo):
         super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)

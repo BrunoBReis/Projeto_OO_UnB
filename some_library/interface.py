@@ -225,6 +225,92 @@ class SistemaBancario(Funcoes):
         self.criando_botoes()
         root.mainloop()
 
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE BÁSICA DO CAIXA ELETRÔNICO---------------------------------
+#---------------------------------------------------------------------------------------
+
+# Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
+    def interface_basica(self):
+        self.root.title("Caixa Bancário")
+        self.root.configure(background="#5E5D5D") 
+        self.root.geometry("700x700")
+        self.root.resizable(False, False)
+
+    # Função para criar todos os botões de nosso Caixa Eletrônico principal
+    def criando_botoes(self):
+        self.botao1 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="1", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao1.place(relx= 0.03, rely= 0.55, relwidth= 0.22, relheight= 0.09)
+
+        self.botao2 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="2", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao2.place(relx= 0.27, rely= 0.55, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao3 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="3", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao3.place(relx= 0.51, rely= 0.55, relwidth= 0.22, relheight= 0.09)
+
+        self.botao4 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="4", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao4.place(relx= 0.03, rely= 0.66, relwidth= 0.22, relheight= 0.09)
+
+        self.botao5 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="5", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao5.place(relx= 0.27, rely= 0.66, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao6 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="6", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao6.place(relx= 0.51, rely= 0.66, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao7 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="7", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao7.place(relx= 0.03, rely= 0.77, relwidth= 0.22, relheight= 0.09)
+
+        self.botao8 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="8", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao8.place(relx= 0.27, rely= 0.77, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao9 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="9", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao9.place(relx= 0.51, rely= 0.77, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao_cancela = Button(self.root, bg="#E9441B", highlightbackground="#C10D01", highlightthickness=3, text="Cancela", 
+                                    font=self.tela_fonte,  activebackground="#C10D01")
+        self.botao_cancela.place(relx= 0.03, rely= 0.88, relwidth= 0.22, relheight= 0.09)
+
+        self.botao0 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="0", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botao0.place(relx= 0.27, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao_confirma = Button(self.root, bg="#28A80F", highlightbackground="#20850D", highlightthickness=3, text="Confirma", 
+                                     font=self.tela_fonte,  activebackground="#20850D")
+        self.botao_confirma.place(relx= 0.51, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
+
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE TELA INICIAL-----------------------------------------------
+#---------------------------------------------------------------------------------------
+
+# Função constroi a tela inicial de quando ligamos o prgrama
+    def tela_inicial(self):
+
+        self.limpa_tela(self.frame1)
+
+        self.faz_titulo("MENU")
+
+
+        self.botao_login = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Login", 
+                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_login(""))
+        self.botao_login.place(relx=0.5, rely=0.42, relwidth=0.4, relheight=0.1, anchor=CENTER)
+
+
+        self.botao_sair = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Sair", 
+                                 font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=self.root.quit)
+        self.botao_sair.place(relx=0.5, rely=0.54, relwidth=0.4, relheight=0.1, anchor=CENTER)
+
+
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE TELA LOGIN-----------------------------------------------
+#---------------------------------------------------------------------------------------
 
 # Função para construção da página de login
     def tela_login(self, aviso):
@@ -260,10 +346,15 @@ class SistemaBancario(Funcoes):
         self.bt_voltar.place(relx=0.88, rely=0.90, relwidth=0.11, relheight=0.09)
 
 
+
+
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE TELA USUÁRIO-----------------------------------------------
+#---------------------------------------------------------------------------------------
+
 # Função para construção da tela de usuário
 # Tive que fazer uma gambiarra e essa função também faz parte de confirmar se os dados 
 # estão coerentes e gerar a pagina correspondente para o devido tipo de usuário ("Gerente" ou "Cliente")
-
     def tela_usuario(self, aviso):
 
         self.limpa_tela(self.frame1)
@@ -289,8 +380,24 @@ class SistemaBancario(Funcoes):
                 self.mostra_funcoes_gerente()
                 self.faz_titulo("GERENTE")
 
+    # Função para padronizar frames do menu de usuários
+    def frames_menu_de_usuário(self):
+
+        self.fr_info_conta = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_info_conta.place(relx= 0.01, rely= 0.12, relwidth= 0.71, relheight= 0.36)
+
+        self.fr_acoes = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_acoes.place(relx= 0.01, rely= 0.5, relwidth= 0.71, relheight= 0.5)
+
+        self.fr_lista = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.fr_lista.place(relx= 0.73, rely= 0.12, relwidth= 0.27, relheight= 0.88)
+
     
-    
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE PÁGINA GERENTE-----------------------------------------------
+#---------------------------------------------------------------------------------------
+
+
     def tela_1_cadastra_cli(self):
 
         self.tela_cadastra = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
@@ -513,6 +620,12 @@ class SistemaBancario(Funcoes):
         self.l_salreal_cli.place(relx=0.03, rely=0.70)
 
             
+    
+#---------------------------------------------------------------------------------------
+#------------------CONFIRMA SENHA (NÃO ESTÁ SENDO APLICADO AINDA)-----------------------
+#---------------------------------------------------------------------------------------
+    
+    
     def tela_confirma_senha(self, cod):
 
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
@@ -529,93 +642,9 @@ class SistemaBancario(Funcoes):
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.verifica_se_pode_del(cod))
         self.botao_confirma.place(relx=0.5, rely=0.85, relwidth=0.5, relheight=0.1, anchor=CENTER)
 
-# Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
-
-    def interface_basica(self):
-        self.root.title("Caixa Bancário")
-        self.root.configure(background="#5E5D5D") 
-        self.root.geometry("700x700")
-        self.root.resizable(False, False)
-
-# Função constroi a tela inicial de quando ligamos o prgrama
-
-    def tela_inicial(self):
-
-        self.limpa_tela(self.frame1)
-
-        self.faz_titulo("MENU")
 
 
-        self.botao_login = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Login", 
-                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_login(""))
-        self.botao_login.place(relx=0.5, rely=0.42, relwidth=0.4, relheight=0.1, anchor=CENTER)
 
 
-        self.botao_sair = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Sair", 
-                                 font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=self.root.quit)
-        self.botao_sair.place(relx=0.5, rely=0.54, relwidth=0.4, relheight=0.1, anchor=CENTER)
-
-# Função para padronizar frames do menu de usuários
-
-    def frames_menu_de_usuário(self):
-
-        self.fr_info_conta = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_info_conta.place(relx= 0.01, rely= 0.12, relwidth= 0.71, relheight= 0.36)
-
-        self.fr_acoes = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_acoes.place(relx= 0.01, rely= 0.5, relwidth= 0.71, relheight= 0.5)
-
-        self.fr_lista = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
-        self.fr_lista.place(relx= 0.73, rely= 0.12, relwidth= 0.27, relheight= 0.88)
 
 
-# Função para criar todos os botões de nosso Caixa Eletrônico principal
-    
-    def criando_botoes(self):
-        self.botao1 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="1", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao1.place(relx= 0.03, rely= 0.55, relwidth= 0.22, relheight= 0.09)
-
-        self.botao2 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="2", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao2.place(relx= 0.27, rely= 0.55, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao3 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="3", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao3.place(relx= 0.51, rely= 0.55, relwidth= 0.22, relheight= 0.09)
-
-        self.botao4 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="4", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao4.place(relx= 0.03, rely= 0.66, relwidth= 0.22, relheight= 0.09)
-
-        self.botao5 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="5", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao5.place(relx= 0.27, rely= 0.66, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao6 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="6", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao6.place(relx= 0.51, rely= 0.66, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao7 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="7", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao7.place(relx= 0.03, rely= 0.77, relwidth= 0.22, relheight= 0.09)
-
-        self.botao8 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="8", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao8.place(relx= 0.27, rely= 0.77, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao9 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="9", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao9.place(relx= 0.51, rely= 0.77, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao_cancela = Button(self.root, bg="#E9441B", highlightbackground="#C10D01", highlightthickness=3, text="Cancela", 
-                                    font=self.tela_fonte,  activebackground="#C10D01")
-        self.botao_cancela.place(relx= 0.03, rely= 0.88, relwidth= 0.22, relheight= 0.09)
-
-        self.botao0 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="0", 
-                             font=self.tela_fonte,  activebackground="#4D4D4D")
-        self.botao0.place(relx= 0.27, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
-
-        self.botao_confirma = Button(self.root, bg="#28A80F", highlightbackground="#20850D", highlightthickness=3, text="Confirma", 
-                                     font=self.tela_fonte,  activebackground="#20850D")
-        self.botao_confirma.place(relx= 0.51, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
