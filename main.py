@@ -33,7 +33,7 @@ def workspace():
 
     # visualizando o historico
 
-    pessoa.pagamento_programado('12/06/2023')
+    pessoa.pagamento_programado('15/06/2023', 200, lista_pagamento_programado, '000184')
     
 if __name__ == '__main__':
     workspace()
