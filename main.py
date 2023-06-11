@@ -23,8 +23,11 @@ def workspace():
         lista_historico = json.load(historico_file)
 
     # fazendo as alterações na conta 
-    pessoa.sacar(100, lista_clientes, '000184')
-    pessoa.depositar(1000, lista_clientes, '000184')
+    #pessoa.sacar(100, lista_clientes, '000184')
+    #pessoa.depositar(1000, lista_clientes, '000184')
+
+    # visualizando o historico
+    pessoa.visualiar_historico()
     
 if __name__ == '__main__':
     workspace()
