@@ -96,7 +96,7 @@ class Cliente(Usuario):
     def pagamento_programado(self):
         pass
     
-    def visualiar_historico(self):
+    def visualizar_historico(self):
         with open('Historico.json') as historico_file:
             historico_lista = json.load(historico_file)
 
