@@ -209,17 +209,12 @@ class Empresa(Cliente):
 
 # a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
 # para ser pago em uma certa data
-    def solicitar_credito(self, clientes, codigo, valor):
-        if valor < clientes[codigo]['Saldo']:
-            print('Você consegue realizar o crédito')
-            data_atual = datetime.now()
-            data_pagamento = data_atual + timedelta(days=7)
-            
-            juros = 0.1
-
-            valor_acresentado = valor * juros 
+    def solicitar_credito(self, valor, codigo):
+        data_atual = datetime.now().day
+        if data_atual > 5:
+            print('Hoje é depois do dia 5')
         else:
-            print('Com esse valor não possível solicitar crédito')
+            print('Hoje é antes do dia 5')
 	
     
 class PessoaFisica(Cliente):
