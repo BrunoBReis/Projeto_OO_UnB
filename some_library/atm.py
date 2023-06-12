@@ -1,15 +1,17 @@
 import json
-import datetime
+from datetime import datetime, time
 
 #---------------------------------------------------------------------------------------
-#------------------CLASSE BANCO DE DADOS-------------------------------------------------------
+#------------------CLASSE BANCO DE DADOS------------------------------------------------
 #---------------------------------------------------------------------------------------
 
 class BancoDeDados:
-
-# Função construtora para pegar a base de dados nos arquivos ".json" e tranformar em dict no codigo
-
+    """ Função construtora para pegar a base de dados 
+    nos arquivos ".json" e tranformar em dict no codigo """
+    
     def __init__(self):
+        """ Função inicializa os bancos de  dados """
+    
         with open("Gerentes.json") as GeFile:
             self.gerentes = json.load(GeFile)
         with open("Clientes.json") as CliFile:
@@ -24,8 +26,11 @@ class BancoDeDados:
 
 # na classe usuário precisa-se colar um atributo de limite com um valor fixo de 1000
 class Usuario:
-    
+    """ Classe usuário é reponsável pela contrução tanto de cliente quanto de gerente """
+
     def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
+        """ Inicializa todas as características de usuário """
+
         self.nome = nome
         self.endereco = endereco
         self.telefone = telefone
@@ -38,27 +43,47 @@ class Usuario:
 #---------------------------------------------------------------------------------------
 
 class Gerente(Usuario):
+    """ Classe gerente é responsável por modificar atributos de clientes"""
     
     def __init__(self, nome, endereco, telefone, senha, codigo, tipo):
+        """ Inicializa e herda as características de usuário """
+
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
     
     def cadastrar_user(self, clientes, tipo, nome, endereco, telefone, senha, codigo, cpf_cnpj, saldo):
-        novo_cliente = {"Tipo" : tipo, "Nome" : nome, "Endereco" : endereco, "Telefone" : telefone, "Senha" : senha, "CPF/CNPJ" : cpf_cnpj, "Saldo" : saldo}
+        """ Função responsável por cadastrar o cliente no banco de dados """
+
+        novo_cliente = {"Tipo" : tipo,
+                        "Nome" : nome,
+                        "Endereco" : endereco,
+                        "Telefone" : telefone,
+                        "Senha" : senha,
+                        "CPF/CNPJ" : cpf_cnpj,
+                        "Saldo" : saldo,}
         clientes.update({codigo : novo_cliente})
+
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
     
     def remover_user(self, clientes, codigo):
+        """ Função responsável por remover os clientes do banco de dados """
+
         clientes.pop(codigo, "Cliente não existe")
+
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
     
     def editar_user(self, clientes, codigo, dado, novo_dado):
+        """ Função responsável por editar as características do cliente do banco de dados """
+        
         clientes[codigo][dado] = novo_dado
+
         with open("Clientes.json", "w") as arquivo:
             json.dump(clientes, arquivo, indent=4)
         
     def visualiza_user(self, clientes):
+        """ Função responsável por visualizar os clientes no banco de dados """
+        
         for conta in clientes:
             print (f"[{conta}]\n\n")
             for item in clientes[conta]:
@@ -71,11 +96,17 @@ class Gerente(Usuario):
 #---------------------------------------------------------------------------------------
 
 class Cliente(Usuario):
+    """ Classe cliente responsável pelas funcionalidades de clientes e herdas as características de usuário """
+
     def __init__(self, saldo, nome, endereco, telefone, senha, codigo, tipo):
+        """ Inicializa as características de cliente e de usuário """
+
         super().__init__(nome, endereco, telefone, senha, codigo, tipo)
         self.saldo = saldo
 
     def sacar(self, valor, clientes, codigo):
+        """ Função responsável por sacar o dinheiro no banco de dados e registrar a transação para o banco de dados """
+
         if valor <= clientes[codigo]['Saldo']:
             clientes[codigo]['Saldo'] -= valor
             with open('Clientes.json', 'w') as clientes_file:
@@ -85,6 +116,8 @@ class Cliente(Usuario):
             print('Valor maior do que o saldo da conta')
     
     def depositar(self, valor, clientes, codigo):
+        """ Função responsável por depositar um saldo no banco de dados e registrar a transação para o banco de dados"""
+
         clientes[codigo]['Saldo'] += valor
         with open('Clientes.json', 'w') as clientes_file:
             json.dump(clientes, clientes_file, indent=4)
