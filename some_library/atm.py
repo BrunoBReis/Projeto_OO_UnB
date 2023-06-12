@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class SistemaBancario:
 
@@ -212,9 +212,15 @@ class Empresa(Cliente):
     def solicitar_credito(self, clientes, codigo, valor):
         if valor < clientes[codigo]['Saldo']:
             print('Você consegue realizar o crédito')
+            data_atual = datetime.now()
+            data_pagamento = data_atual + timedelta(days=7)
+            
+            juros = 0.1
+
+            valor_acresentado = valor * juros 
         else:
             print('Com esse valor não possível solicitar crédito')
-
+	
     
 class PessoaFisica(Cliente):
     def __init__(self, saldo, nome, endereco, telefone, senha, cpf, tipo, codigo):
