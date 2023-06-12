@@ -6,7 +6,8 @@
         "Telefone": "8000-3420",
         "Senha": "apple2000",
         "CPF/CNPJ": "20-2394889898.38",
-        "Saldo": 3400.0
+        "Saldo": 3400.0,
+        "Credito" : 0.0
     },
     "100027": {
         "Tipo": "Pessoa",
@@ -15,7 +16,8 @@
         "Telefone": "99122-3445",
         "Senha": "senha",
         "CPF/CNPJ": "73809566666",
-        "Saldo": 0.0
+        "Saldo": 0.0,
+        "Credito": 0.0
     },
     "100042": {
         "Tipo": "Pessoa",
@@ -24,6 +26,7 @@
         "Telefone": "8888-6578",
         "Senha": "senha",
         "CPF/CNPJ": "78390500012",
-        "Saldo": 599.0
+        "Saldo": 599.0,
+        "Credito": 0.0
     }
 }
