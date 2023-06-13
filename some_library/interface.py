@@ -127,6 +127,13 @@ class Funcoes():
             self.user.sacar(valor, self.bancoDados.clientes, self.cod, self.usuario["Saldo"])
             self.tela_usuario("")
 
+    def confere_pode_depo(self, valor):
+        if valor <= 0:
+            self.limpa_tela(self.tela_depo_din)
+            self.mostra_aviso("ERRO! Você não pode depositar um valor nulo ou negativo!")
+        else:
+            self.user.depositar(valor, self.bancoDados.clientes, self.cod, self.usuario["Saldo"])
+            self.tela_usuario("")
     
     def mostra_aviso(self, aviso):
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
@@ -786,7 +793,7 @@ class SistemaBancario(Funcoes):
         self.en_quanto_depo.place(relx=0.125, rely=0.60, relwidth=0.75)
 
         self.bt_confirmar = Button(self.tela_dep_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
-                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_edit_cli(cod, escolha, self.en_nova_esc_cli.get()))
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_depo(float(self.en_quanto_depo.get())))
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
 
     def tela_pagar_programado(self):
