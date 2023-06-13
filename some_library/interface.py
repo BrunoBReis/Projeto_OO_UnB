@@ -32,7 +32,7 @@ class Funcoes():
         self.l_codreal_cli.place(relx=0.3, rely=0.7)
 
         self.botao_cadastra = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar", 
-                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : [self.user.cadastrar_user(self.bancoDados.clientes, self.tipo.get(), self.nome, self.endereco, self.telefone, self.senha_segura, self.cod_random, self.cpf_cnpj, float(self.saldo)), self.tela_usuario("")])
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : [self.user.cadastrar_user(self.bancoDados.clientes, self.bancoDados.historico, self.bancoDados.programado, self.tipo.get(), self.nome, self.endereco, self.telefone, self.senha_segura, self.cod_random, self.cpf_cnpj, float(self.saldo)), self.tela_usuario("")])
         self.botao_cadastra.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
 
     def gera_sen_random(self):
@@ -117,7 +117,16 @@ class Funcoes():
             self.mostra_aviso("ERROR! Não pode enviar uma mudança vazia!")
         else: 
             self.user.editar_user(self.bancoDados.clientes, cod, dado, novo_dado)
-            self.tela_usuario("")    
+            self.tela_usuario("")   
+
+    def confere_pode_sacar(self, valor):
+        if valor > self.usuario["Saldo"]:
+            self.limpa_tela(self.tela_saca_din)
+            self.mostra_aviso("ERRO! Você não pode sacar mais dinheiro do que\n você possui na conta!")
+        else:
+            self.user.sacar(valor, self.bancoDados.clientes, self.cod, self.usuario["Saldo"])
+            self.tela_usuario("")
+
     
     def mostra_aviso(self, aviso):
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
@@ -333,10 +342,14 @@ class SistemaBancario(Funcoes):
         elif ("Saldo" in self.usuario) == True:
             if self.usuario["Tipo"] == "Empresa":
                 self.user = Empresa(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"], self.cod)
-                
+                self.mostra_dados_cliente()
+                self.mostra_lista_cliente()
+                self.mostra_funcoes_cliente()
             else:
                 self.user = PessoaFisica(self.usuario["Saldo"], self.usuario["Nome"], self.usuario["Endereco"], self.usuario["Telefone"], self.usuario["Senha"], self.usuario["CPF/CNPJ"], self.usuario["Tipo"], self.cod)
-                
+                self.mostra_dados_cliente()
+                self.mostra_lista_cliente()
+                self.mostra_funcoes_cliente()
             self.faz_titulo("CLIENTE") 
 
         elif self.usuario["Tipo"] == "Gerente":
@@ -629,6 +642,162 @@ class SistemaBancario(Funcoes):
         self.l_salreal_cli.place(relx=0.03, rely=0.70)
 
             
+#---------------------------------------------------------------------------------------
+#------------------INTERFACE PAGINA CLIENTES--------------------------------------------
+#---------------------------------------------------------------------------------------
+
+    def mostra_dados_cliente(self):
+        self.l_nome_cliente = Label(self.fr_info_conta, text = self.usuario["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_nome_cliente.place(relx=0.02, rely=0.01)
+        
+        self.l_id_cliente = Label(self.fr_info_conta, text = self.usuario["Endereco"], foreground="#50C649", background="#1C1C1C", font=("Terminal", "12", "bold"))
+        self.l_id_cliente.place(relx=0.02, rely=0.4)
+
+        self.l_codigo_conta = Label(self.fr_info_conta, text = self.cod, foreground="#50C649", background="#1C1C1C", font=("Terminal", "12", "bold"))
+        self.l_codigo_conta.place(relx=0.02, rely=0.7)
+
+        self.l_saldo_conta = Label(self.fr_info_conta, text = "Saldo:", foreground="#50C649", background="#1C1C1C", font=("Terminal", "12", "bold"))
+        self.l_saldo_conta.place(relx=0.4, rely=0.7)
+
+        self.l_saldoreal_conta = Label(self.fr_info_conta, text = "R$ " + str(self.usuario["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_saldoreal_conta.place(relx=0.55, rely=0.65)
+
+        self.botao_ver_conta = Button(self.fr_info_conta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Conta", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_dados_conta())
+        self.botao_ver_conta.place(relx=0.9, rely=0.15, relwidth=0.2, relheight=0.3, anchor=CENTER)
+    
+    def mostra_lista_cliente(self):
+        self.l_hist_lista = Label(self.fr_lista, text = "Histórico", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_hist_lista.place(relx=0.5, rely=0.1, anchor=CENTER)
+        
+        self.scrollbar_lista = Scrollbar(self.fr_lista, bg="#1C1C1C", troughcolor="#50C649", activebackground="#000000")
+        self.scrollbar_lista.place(relx=0.9, rely=0.2, relwidth=0.1, relheight=0.8)
+
+        self.lista_cliente = Listbox(self.fr_lista, bg="#1C1C1C", foreground="#50C649", highlightbackground="#50C649",
+                                     selectbackground="#50C649", selectforeground="#1C1C1C", font=("Terminal", "10", "bold"), yscrollcommand= self.scrollbar_lista.set)
+        #for cod in self.bancoDados.historico[self.cod]:
+        #    self.lista_gerente.insert(END, cod)
+        #self.lista_gerente.place(relx=0.0, rely= 0.2, relwidth=0.9, relheight=0.8)
+        #self.scrollbar_lista.config(command= self.lista_gerente.yview)
+
+    def mostra_funcoes_cliente(self):
+        self.bt_sacar = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Sacar", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_sacar())
+        self.bt_sacar.place(relx=0, rely=0, relwidth=1, relheight=0.2)
+
+        self.bt_depositar = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Depositar", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_depositar())
+        self.bt_depositar.place(relx=0, rely=0.2, relwidth=1, relheight=0.2)
+
+        self.bt_pagar_programado = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Pagamento Programado", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_pagar_programado())
+        self.bt_pagar_programado.place(relx=0, rely=0.4, relwidth=1, relheight=0.2)
+
+        self.bt_visualiza = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Visualiza Histórico", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_visualiza_hist())
+        self.bt_visualiza.place(relx=0, rely=0.6, relwidth=1, relheight=0.2)
+
+        self.bt_solicita_cred = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Solicita Crédito", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_solicita_crédito())
+        self.bt_solicita_cred.place(relx=0, rely=0.8, relwidth=1, relheight=0.2)
+
+    
+    def tela_dados_conta(self):
+        
+        self.tela_visualiza = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_visualiza.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_visualiza, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_nome_cli = Label(self.tela_visualiza, text = "Nome: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nome_cli.place(relx=0.03, rely=0.05)
+        self.l_nomereal_cli = Label(self.tela_visualiza, text = self.usuario["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_nomereal_cli.place(relx=0.23, rely=0.05)
+
+        self.l_end_cli = Label(self.tela_visualiza, text = "End: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_end_cli.place(relx=0.03, rely=0.17)
+        self.l_endreal_cli = Label(self.tela_visualiza, text = self.usuario["Endereco"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_endreal_cli.place(relx=0.23, rely=0.17)
+
+        self.l_tel_cli = Label(self.tela_visualiza, text = "Tel: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_tel_cli.place(relx=0.03, rely=0.29)
+        self.l_telreal_cli = Label(self.tela_visualiza, text = self.usuario["Telefone"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_telreal_cli.place(relx=0.23, rely=0.29)
+
+        if self.usuario["Tipo"] == "Pessoa":
+            self.l_cpf_cli = Label(self.tela_visualiza, text = "CPF: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        else:
+            self.l_cpf_cli = Label(self.tela_visualiza, text = "CNPJ: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cpf_cli.place(relx=0.03, rely=0.41)
+        self.l_cpfreal_cli = Label(self.tela_visualiza, text = self.usuario["CPF/CNPJ"], foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_cpfreal_cli.place(relx=0.23, rely=0.41)
+
+        self.l_sal_cli = Label(self.tela_visualiza, text = "Crédito à Pagar: ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+        self.l_sal_cli.place(relx=0.03, rely=0.53)
+        self.l_salreal_cli = Label(self.tela_visualiza, text = "R$ " + str(self.usuario["Credito"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_salreal_cli.place(relx=0.03, rely=0.70)
+    
+    def tela_sacar(self):
+        self.tela_saca_din = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_saca_din.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.l_sacar = Label(self.tela_saca_din, text = "SACAR", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_sacar.place(relx=0.5, rely=0.08, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_saca_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_valor_atual = Label(self.tela_saca_din, text = "Saldo atual:", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_valor_atual.place(relx=0.03, rely=0.19)
+        self.l_valor_real = Label(self.tela_saca_din, text = "R$ " + str(self.usuario["Saldo"]), foreground="#50C649", background="#1C1C1C", font=("Terminal", "15", "bold"))
+        self.l_valor_real.place(relx=0.5, rely=0.35, anchor=CENTER)
+
+        self.l_quanto_sacar = Label(self.tela_saca_din, text = "Quanto você quer sacar:", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_quanto_sacar.place(relx=0.03, rely=0.46)
+        self.en_quanto_sacar = Entry(self.tela_saca_din, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_quanto_sacar.place(relx=0.125, rely=0.60, relwidth=0.75)
+
+        self.bt_confirmar = Button(self.tela_saca_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_sacar(float(self.en_quanto_sacar.get())))
+        self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
+
+    def tela_depositar(self):
+        self.tela_dep_din = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
+        self.tela_dep_din.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
+
+        self.l_depositar = Label(self.tela_dep_din, text = "DEPOSITAR", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+        self.l_depositar.place(relx=0.5, rely=0.08, anchor=CENTER)
+
+        self.botao_x = Button(self.tela_dep_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+
+        self.l_valor_atual = Label(self.tela_dep_din, text = "Saldo atual:", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_valor_atual.place(relx=0.03, rely=0.19)
+        self.l_valor_real = Label(self.tela_dep_din, text = "R$ " + str(self.usuario["Saldo"]), foreground="#50C649", background="#1C1C1C", font=("Terminal", "15", "bold"))
+        self.l_valor_real.place(relx=0.5, rely=0.35, anchor=CENTER)
+
+        self.l_quanto_depo = Label(self.tela_dep_din, text = "Quanto você quer depositar:", foreground="#50C649", background="#1C1C1C", font=("Terminal", "13", "bold"))
+        self.l_quanto_depo.place(relx=0.03, rely=0.46)
+        self.en_quanto_depo = Entry(self.tela_dep_din, foreground="#1C1C1C", background="#50C649", highlightbackground="#50C649", font=self.tela_fontinha)
+        self.en_quanto_depo.place(relx=0.125, rely=0.60, relwidth=0.75)
+
+        self.bt_confirmar = Button(self.tela_dep_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
+                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_edit_cli(cod, escolha, self.en_nova_esc_cli.get()))
+        self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
+
+    def tela_pagar_programado(self):
+        pass
+
+    def tela_visualiza_hist(self):
+        pass
+
+    def tela_solicita_crédito(self):
+        pass
+
     
 #---------------------------------------------------------------------------------------
 #------------------CONFIRMA SENHA (NÃO ESTÁ SENDO APLICADO AINDA)-----------------------

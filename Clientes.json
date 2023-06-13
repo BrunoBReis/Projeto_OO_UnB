@@ -4,9 +4,10 @@
         "Nome": "Davi Fonseca R.",
         "Endereco": "Brasilia, Asa Sul",
         "Telefone": "8344-5678",
-        "Senha": "GQNVP+wf",
+        "Senha": "senha",
         "CPF/CNPJ": "783990123-76",
-        "Saldo": 50.0
+        "Saldo": 15.0,
+        "Credito": 0.0
     },
     "4167.1-46": {
         "Tipo": "Empresa",
@@ -15,7 +16,8 @@
         "Telefone": "8000-3432",
         "Senha": "0DJ2qI,;",
         "CPF/CNPJ": "32498234.432",
-        "Saldo": 50000.0
+        "Saldo": 50000.0,
+        "Credito": 0.0
     },
     "9727.0-81": {
         "Tipo": "Pessoa",
@@ -24,7 +26,8 @@
         "Telefone": "3453-3453",
         "Senha": ";RIpr\"[l",
         "CPF/CNPJ": "734487123.55",
-        "Saldo": 275.0
+        "Saldo": 275.0,
+        "Credito": 0.0
     },
     "3563.0-12": {
         "Tipo": "Pessoa",
@@ -33,7 +36,8 @@
         "Telefone": "0000-0000",
         "Senha": "davi10",
         "CPF/CNPJ": "887884821-00",
-        "Saldo": 1200.53
+        "Saldo": 1200.53,
+        "Credito": 0.0
     },
     "1302.1-37": {
         "Tipo": "Empresa",
@@ -42,7 +46,8 @@
         "Telefone": "8000-1234",
         "Senha": "SempreAlem123",
         "CPF/CNPJ": "345234592844.22",
-        "Saldo": 100000.0
+        "Saldo": 100000.0,
+        "Credito": 0.0
     },
     "1262.0-60": {
         "Tipo": "Pessoa",
@@ -51,6 +56,27 @@
         "Telefone": "99133-9938",
         "Senha": "senha",
         "CPF/CNPJ": "123854888-00",
-        "Saldo": 123.45
+        "Saldo": 123.45,
+        "Credito": 0.0
+    },
+    "8290.0-94": {
+        "Tipo": "Pessoa",
+        "Nome": "Davi Levy",
+        "Endereco": "sqs 112 bloco A",
+        "Telefone": "99122-6858",
+        "Senha": "123",
+        "CPF/CNPJ": "738095352-68",
+        "Saldo": 300.0,
+        "Credito": 0.0
+    },
+    "8582.0-16": {
+        "Tipo": "Pessoa",
+        "Nome": "Vitor Belford",
+        "Endereco": "Miami, California",
+        "Telefone": "8888-9999",
+        "Senha": ">i}Sv>F$",
+        "CPF/CNPJ": "735666543-00",
+        "Saldo": 555.0,
+        "Credito": 0.0
     }
 }
