@@ -34,8 +34,7 @@ def workspace():
     # visualizando o historico
 
     #pessoa.pagamento_programado('15/06/2023', 200, lista_pagamento_programado, '000184')
-    empresa.solicitar_credito(lista_clientes, '000184', 3500)
-
+    empresa.solicitar_credito(10, '000184')
 
 if __name__ == '__main__':
     workspace()

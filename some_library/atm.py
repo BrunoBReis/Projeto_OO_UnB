@@ -199,6 +199,22 @@ class Cliente(Usuario):
         with open('Historico.json', 'w') as historico_update:
             json.dump(historico_lista, historico_update, indent=4)
         
+    def solicitar_credito(self, valor, codigo):
+        data_atual = datetime.now().day
+        if data_atual >= 5:
+            print('Hoje é depois do dia 5')
+            with open('Clientes.json') as clientes_file:
+                clientes_dic = json.load(clientes_file)
+
+            clientes_dic[codigo]['Saldo'] += valor
+            self.registrar_transacao(valor, codigo, tipo_transacao='Solicitar Credito')
+            clientes_dic[codigo]['Credito'] += valor
+
+            with open('Clientes.json', 'w') as atualizar_clientes:
+                json.dump(clientes_dic, atualizar_clientes, indent=4)
+
+        else:
+            print('Não é possível fazer a solicitação')
 
     
     
@@ -209,12 +225,6 @@ class Empresa(Cliente):
 
 # a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
 # para ser pago em uma certa data
-    def solicitar_credito(self, valor, codigo):
-        data_atual = datetime.now().day
-        if data_atual > 5:
-            print('Hoje é depois do dia 5')
-        else:
-            print('Hoje é antes do dia 5')
 	
     
 class PessoaFisica(Cliente):
@@ -222,5 +232,3 @@ class PessoaFisica(Cliente):
         super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)
         self.cpf = cpf
 
-    def solicitar_credito(self):
-        pass

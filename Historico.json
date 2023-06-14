@@ -8,5 +8,40 @@
         "Codigo": "000184",
         "Tipo": "Deposito",
         "Valor": 1000
+    },
+    {
+        "Codigo": 3500,
+        "Tipo": "Solicitar Credito",
+        "Valor": "000184"
+    },
+    {
+        "Codigo": 3500,
+        "Tipo": "Solicitar Credito",
+        "Valor": "000184"
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Solicitar Credito",
+        "Valor": 10
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Solicitar Credito",
+        "Valor": 10
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Solicitar Credito",
+        "Valor": 10
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Solicitar Credito",
+        "Valor": 10
+    },
+    {
+        "Codigo": "000184",
+        "Tipo": "Solicitar Credito",
+        "Valor": 10
     }
 ]
