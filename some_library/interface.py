@@ -127,12 +127,16 @@ class Funcoes():
             self.tela_usuario("")   
 
     def confere_pode_sacar(self, valor):
-        if valor > self.usuario["Saldo"]:
-            self.limpa_tela(self.tela_saca_din)
-            self.mostra_aviso("ERRO! Você não pode sacar mais dinheiro do que\n você possui na conta!")
-        else:
-            self.user.sacar(valor, self.bancoDados.clientes, self.cod, self.usuario["Saldo"])
+        if ((self.usuario["Tipo"] == "Pessoa") and (self.bancoDados.clientes[self.cod]["Credito"] > 2000) or (self.usuario["Tipo"] == "Empresa") and (self.bancoDados.clientes[self.cod]["Credito"] > 50000)):    
             self.tela_usuario("")
+            self.mostra_aviso("ERROR! Você não pode fazer essa ação até pagar\na sua dívida de cŕedito!")
+        else:    
+            if valor > self.usuario["Saldo"]:
+                self.limpa_tela(self.tela_saca_din)
+                self.mostra_aviso("ERRO! Você não pode sacar mais dinheiro do que\n você possui na conta!")
+            else:
+                self.user.sacar(valor, self.bancoDados.clientes, self.cod, self.usuario["Saldo"])
+                self.tela_usuario("")
 
     def confere_pode_depo(self, valor):
         if valor <= 0:
@@ -143,56 +147,106 @@ class Funcoes():
             self.tela_usuario("")
     
     def confere_pode_cred(self, valor):
-        if self.usuario["Tipo"] == "Pessoa":
-            if valor + self.bancoDados.clientes[self.cod]["Credito"] > 2000.0:
-                self.limpa_tela(self.tela_cred_din)
-                self.mostra_aviso("ERRO! Você não pode solicitar por um valor\nque supere o seu limite de R$2000.00!")
+        if ((self.usuario["Tipo"] == "Pessoa") and (self.bancoDados.clientes[self.cod]["Credito"] > 2000) or (self.usuario["Tipo"] == "Empresa") and (self.bancoDados.clientes[self.cod]["Credito"] > 50000)):    
+            self.tela_usuario("")
+            self.mostra_aviso("ERROR! Você não pode fazer essa ação até pagar\na sua dívida de cŕedito!")
+        else:    
+            if self.usuario["Tipo"] == "Pessoa":
+                if valor + self.bancoDados.clientes[self.cod]["Credito"] > 2000.0:
+                    self.limpa_tela(self.tela_cred_din)
+                    self.mostra_aviso("ERRO! Você não pode solicitar por um valor\nque supere o seu limite de R$2000.00!")
+                else:
+                    self.user.solicitar_credito(valor, self.bancoDados.clientes, self.cod, self.usuario["Credito"], self.usuario["Saldo"])
+                    self.tela_usuario("")
+            elif self.usuario["Tipo"] == "Empresa":
+                if valor + self.bancoDados.clientes[self.cod]["Credito"] > 50000:
+                    self.limpa_tela(self.tela_cred_din)
+                    self.mostra_aviso("ERRO! Você não pode solicitar por um valor\nque supere o seu limite de R$50000.00!")
+                else:
+                    self.user.solicitar_credito(valor, self.bancoDados.clientes, self.cod, self.usuario["Credito"], self.usuario["Saldo"])
+                    self.tela_usuario("")
+
+    def confere_pode_pagar_cred(self):  
+            if self.usuario["Credito"] > self.usuario["Saldo"]:
+                self.limpa_tela(self.tela_visualiza)
+                self.mostra_aviso("ERRO! Você não possui saldo suficiente para\n pagar a sua dívida!")
             else:
-                self.user.solicitar_credito(valor, self.bancoDados.clientes, self.cod, self.usuario["Credito"], self.usuario["Saldo"])
-                self.tela_usuario("")
-        elif self.usuario["Tipo"] == "Empresa":
-            if valor + self.bancoDados.clientes[self.cod]["Credito"] > 50000:
-                self.limpa_tela(self.tela_cred_din)
-                self.mostra_aviso("ERRO! Você não pode solicitar por um valor\nque supere o seu limite de R$50000.00!")
-            else:
-                self.user.solicitar_credito(valor, self.bancoDados.clientes, self.cod, self.usuario["Credito"], self.usuario["Saldo"])
-                self.tela_usuario("")
+                valor = self.bancoDados.clientes[self.cod]["Credito"]
+                self.bancoDados.clientes[self.cod]["Saldo"] -= self.bancoDados.clientes[self.cod]["Credito"]
+                self.bancoDados.clientes[self.cod]["Credito"] = 0
 
-    def confere_pode_pagar_cred(self):
-        if self.usuario["Credito"] > self.usuario["Saldo"]:
-            self.limpa_tela(self.tela_visualiza)
-            self.mostra_aviso("ERRO! Você não possui saldo suficiente para\n pagar a sua dívida!")
-        else:
-            valor = self.bancoDados.clientes[self.cod]["Credito"]
-            self.bancoDados.clientes[self.cod]["Saldo"] -= self.bancoDados.clientes[self.cod]["Credito"]
-            self.bancoDados.clientes[self.cod]["Credito"] = 0
+                with open('Clientes.json', 'w') as clientes_file:
+                    json.dump(self.bancoDados.clientes, clientes_file, indent=4)
 
-            with open('Clientes.json', 'w') as clientes_file:
-                json.dump(self.bancoDados.clientes, clientes_file, indent=4)
-
-            self.user.registrar_transacao(valor, self.cod, "Pagar credito", self.bancoDados.clientes[self.cod]["Saldo"])
-            self.limpa_tela(self.tela_visualiza)
-            self.tela_dados_conta()
+                self.user.registrar_transacao(valor, self.cod, "Pagar credito", self.bancoDados.clientes[self.cod]["Saldo"])
+                self.limpa_tela(self.tela_visualiza)
+                self.tela_dados_conta()
 
     def confere_pode_pagar_prog(self):
-        dia = int(self.en_data_real.get())
-        mes = int(self.en_data_real2.get())
-        ano = int(self.en_data_real3.get())
-        hora = int(self.en_hora_real.get())
-        min = int(self.en_hora_real2.get())
-        seg = int(self.en_hora_real3.get())
-        valor = float(self.en_valor_real.get())
-        dic = {"Mes" : mes, "Dia" : dia, "Ano" : ano, "Hora" : hora, "Minuto" : min, "Valor" : valor}
-        n = {}
-        for i in self.bancoDados.programado[self.cod]:
-            n = i
-        if n == {}:
-            num = 1
+        if self.usuario["Tipo"] == "Pessoa":
+            limite = 2000 - self.bancoDados.clientes[self.cod]["Credito"]
         else:
-            num = int(i) + 1
+            limite = 50000 - self.bancoDados.clientes[self.cod]["Credito"]
 
-        self.user.pagamento_programado(self.bancoDados.programado, dic, self.cod, num)
-        self.tela_usuario("")
+        if ((self.usuario["Tipo"] == "Pessoa") and (self.bancoDados.clientes[self.cod]["Credito"] > 2000) or (self.usuario["Tipo"] == "Empresa") and (self.bancoDados.clientes[self.cod]["Credito"] > 50000)):    
+            self.tela_usuario("")
+            self.mostra_aviso("ERROR! Você não pode fazer essa ação até pagar\na sua dívida de cŕedito!")
+        else:    
+            try:
+                dia = int(self.en_data_real.get())
+            except:
+                return
+            if (dia > 31) or (dia < 1):
+                self.tela_usuario("")
+                self.mostra_aviso("ERROR! Por favor, digite uma data existente\nEX: 12/5/2023")
+            else:
+                try:
+                    mes = int(self.en_data_real2.get())
+                except:
+                    return
+                if (mes > 12) or (mes < 1):
+                    self.tela_usuario("")
+                    self.mostra_aviso("ERROR! Por favor, digite uma data existente\nEX: 12/5/2023")
+                else:
+                    try:
+                        ano = int(self.en_data_real3.get())
+                    except:
+                        return
+                    try:
+                        hora = int(self.en_hora_real.get())
+                    except:
+                        return
+                    if (hora > 12) or (hora < 0):
+                        self.tela_usuario("")
+                        self.mostra_aviso("ERROR! Por favor, digite uma hora existente\nEX: 12:57:00 (Hora máxima = 12)")
+                    else:
+                        try:
+                            min = int(self.en_hora_real2.get())
+                        except:
+                            return
+                        if (min > 59) or (min < 0):
+                            self.tela_usuario("")
+                            self.mostra_aviso("ERROR! Por favor, digite uma hora existente\nEX: 12:57:00 (Hora máxima = 12)")
+                        else:
+                            try:
+                                valor = float(self.en_valor_real.get())
+                            except:
+                                return
+                            if (valor > limite) or (valor < 1):
+                                self.tela_usuario("")
+                                self.mostra_aviso("ERROR! O valor digitado não pode ultrapassar\no limite de crédito da conta")
+                            else:
+                                dic = {"Mes" : mes, "Dia" : dia, "Ano" : ano, "Hora" : hora, "Minuto" : min, "Valor" : valor}
+                                n = {}
+                                for i in self.bancoDados.programado[self.cod]:
+                                    n = i
+                                if n == {}:
+                                    num = 1
+                                else:
+                                    num = int(i) + 1
+
+                                self.user.pagamento_programado(self.bancoDados.programado, dic, self.cod, num)
+                                self.tela_usuario("")
 
     def atualiza_sistema(self):
         data_hoje = datetime.datetime.now()
@@ -232,27 +286,61 @@ class Funcoes():
             json.dump(self.bancoDados.atualizacoes, atualiz_update, indent=4)
 
         list = []
-
+        
         for num in self.bancoDados.programado[self.cod]:
-            if (minuto_atual >= self.bancoDados.programado[self.cod][num]["Minuto"]) or minuto_atual == 0:
+            if (ano_atual > self.bancoDados.programado[self.cod][num]["Ano"]):
+                    valor = self.bancoDados.programado[self.cod][num]["Valor"]
+                    if self.bancoDados.clientes[self.cod]["Saldo"] >= valor:
+                        self.bancoDados.clientes[self.cod]["Saldo"] -= valor
+                    else:
+                        self.bancoDados.clientes[self.cod]["Credito"] += valor
+                    list.append(num)
+            elif (mes_atual > self.bancoDados.programado[self.cod][num]["Mes"]) or mes_atual == 1:
+                if (ano_atual >= self.bancoDados.programado[self.cod][num]["Ano"]):
+                    valor = self.bancoDados.programado[self.cod][num]["Valor"]
+                    if self.bancoDados.clientes[self.cod]["Saldo"] >= valor:
+                        self.bancoDados.clientes[self.cod]["Saldo"] -= valor
+                    else:
+                        self.bancoDados.clientes[self.cod]["Credito"] += valor
+                    list.append(num)
+            elif (dia_atual > self.bancoDados.programado[self.cod][num]["Dia"]) or dia_atual == 1:
+                if (mes_atual >= self.bancoDados.programado[self.cod][num]["Mes"]) or mes_atual == 1:
+                    if (ano_atual >= self.bancoDados.programado[self.cod][num]["Ano"]):
+                        valor = self.bancoDados.programado[self.cod][num]["Valor"]
+                        if self.bancoDados.clientes[self.cod]["Saldo"] >= valor:
+                            self.bancoDados.clientes[self.cod]["Saldo"] -= valor
+                        else:
+                            self.bancoDados.clientes[self.cod]["Credito"] += valor
+                        list.append(num)
+            elif (hora_atual > self.bancoDados.programado[self.cod][num]["Hora"]) or hora_atual == 0:
+                if (dia_atual >= self.bancoDados.programado[self.cod][num]["Dia"]) or dia_atual == 1:
+                    if (mes_atual >= self.bancoDados.programado[self.cod][num]["Mes"]) or mes_atual == 1:
+                        if (ano_atual >= self.bancoDados.programado[self.cod][num]["Ano"]):
+                            valor = self.bancoDados.programado[self.cod][num]["Valor"]
+                            if self.bancoDados.clientes[self.cod]["Saldo"] >= valor:
+                                self.bancoDados.clientes[self.cod]["Saldo"] -= valor
+                            else:
+                                self.bancoDados.clientes[self.cod]["Credito"] += valor
+                            list.append(num)
+            elif (minuto_atual >= self.bancoDados.programado[self.cod][num]["Minuto"]) or minuto_atual == 0:
                 if (hora_atual >= self.bancoDados.programado[self.cod][num]["Hora"]) or hora_atual == 0:
                     if (dia_atual >= self.bancoDados.programado[self.cod][num]["Dia"]) or dia_atual == 1:
                         if (mes_atual >= self.bancoDados.programado[self.cod][num]["Mes"]) or mes_atual == 1:
-                            if (ano_atual >= self.bancoDados.programado[self.cod][num]["Ano"]) or ano_atual == 1:
+                            if (ano_atual >= self.bancoDados.programado[self.cod][num]["Ano"]):
                                 valor = self.bancoDados.programado[self.cod][num]["Valor"]
                                 if self.bancoDados.clientes[self.cod]["Saldo"] >= valor:
                                     self.bancoDados.clientes[self.cod]["Saldo"] -= valor
                                 else:
                                     self.bancoDados.clientes[self.cod]["Credito"] += valor
-                                list.append(num)
+                                list.append(num)              
 
-        for num in list:
-            self.bancoDados.programado[self.cod].pop(num)
-            with open('Pagamento_programado.json', 'w') as pagfile:
-                json.dump(self.bancoDados.programado, pagfile, indent=4)
-            with open("Clientes.json", "w") as arquivo:
-                json.dump(self.bancoDados.clientes, arquivo, indent=4)
-            self.cliente.registrar_transacao(valor, self.cod, "Pagamento Programado", self.bancoDados.clientes[self.cod]["Saldo"])
+            for num in list:
+                self.bancoDados.programado[self.cod].pop(num)
+                with open('Pagamento_programado.json', 'w') as pagfile:
+                    json.dump(self.bancoDados.programado, pagfile, indent=4)
+                with open("Clientes.json", "w") as arquivo:
+                    json.dump(self.bancoDados.clientes, arquivo, indent=4)
+                self.cliente.registrar_transacao(valor, self.cod, "Pagamento Programado", self.bancoDados.clientes[self.cod]["Saldo"])
 
     
     def mostra_aviso(self, aviso):
@@ -348,15 +436,31 @@ class SistemaBancario(Funcoes):
 
         self.botao_cancela = Button(self.root, bg="#E9441B", highlightbackground="#C10D01", highlightthickness=3, text="Cancela", 
                                     font=self.tela_fonte,  activebackground="#C10D01")
-        self.botao_cancela.place(relx= 0.03, rely= 0.88, relwidth= 0.22, relheight= 0.09)
+        self.botao_cancela.place(relx= 0.75, rely= 0.55, relwidth= 0.22, relheight= 0.09)
+
+        self.botao_ponto = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text=".", 
+                                    font=self.tela_fonte,  activebackground="#C10D01")
+        self.botao_ponto.place(relx= 0.03, rely= 0.88, relwidth= 0.22, relheight= 0.09)
 
         self.botao0 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="0", 
                              font=self.tela_fonte,  activebackground="#4D4D4D")
         self.botao0.place(relx= 0.27, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
 
+        self.botaodelete = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botaodelete.place(relx= 0.51, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
+
         self.botao_confirma = Button(self.root, bg="#28A80F", highlightbackground="#20850D", highlightthickness=3, text="Confirma", 
                                      font=self.tela_fonte,  activebackground="#20850D")
-        self.botao_confirma.place(relx= 0.51, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
+        self.botao_confirma.place(relx= 0.75, rely= 0.77, relwidth= 0.22, relheight= 0.09) 
+
+        self.botao_cancela = Button(self.root, bg="#cfc217", highlightbackground="#cfd217", highlightthickness=3, text="Cancela", 
+                                     font=self.tela_fonte,  activebackground="#eac217")
+        self.botao_cancela.place(relx= 0.75, rely= 0.66, relwidth= 0.22, relheight= 0.09)
+
+        self.botaoseta = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="->", 
+                             font=self.tela_fonte,  activebackground="#4D4D4D")
+        self.botaoseta.place(relx= 0.75, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
 
 
 #---------------------------------------------------------------------------------------
@@ -461,7 +565,10 @@ class SistemaBancario(Funcoes):
     def tela_usuario(self, aviso):
 
         self.limpa_tela(self.frame1)
-        self.atualiza_sistema()
+        try:
+            self.atualiza_sistema()
+        except:
+            pass
         self.faz_cabecalho()
         self.frames_menu_de_usuário()
 
@@ -594,42 +701,61 @@ class SistemaBancario(Funcoes):
     def tela_2_cadastra_cliente(self):
         
         self.nome = self.en_nomereal_cli.get()
-        self.endereco = self.en_endreal_cli.get()
-        self.telefone = self.en_telreal_cli.get()
-        self.cpf_cnpj = self.en_cpfreal_cli.get()
-        self.saldo = self.en_salreal_cli.get()
-        self.limpa_tela(self.tela_cadastra)
+        if self.nome == "":
+            return
+        else:
+            self.endereco = self.en_endreal_cli.get()
+            if self.endereco == "":
+                return
+            else:
+                self.telefone = self.en_telreal_cli.get()
+                if self.telefone == "":
+                    return
+                else:
+                    self.cpf_cnpj = self.en_cpfreal_cli.get()
+                    if self.cpf_cnpj == "":
+                        return
+                    else:
+                        self.saldo = self.en_salreal_cli.get()
+                        try:
+                            self.saldo = float(self.saldo)
+                        except:
+                            return
+                        if self.saldo < 0:
+                            return
+                        else:
+                            self.limpa_tela(self.tela_cadastra)
 
-        self.l_cadastro_cli = Label(self.tela_cadastra, text = "CADASTRO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
-        self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
-        
-        self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
-                                  font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
-        self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
+                            self.l_cadastro_cli = Label(self.tela_cadastra, text = "CADASTRO", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
+                            self.l_cadastro_cli.place(relx=0.5, rely=0.08, anchor=CENTER)
+                            
+                            self.botao_x = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="X", 
+                                                    font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_usuario(""))
+                            self.botao_x.place(relx=0.95, rely=0.05, relwidth=0.1, relheight=0.1, anchor=CENTER)
 
-        self.l_sen_cli = Label(self.tela_cadastra, text = "Senha:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
-        self.l_sen_cli.place(relx=0.03, rely=0.25)
+                            self.l_sen_cli = Label(self.tela_cadastra, text = "Senha:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+                            self.l_sen_cli.place(relx=0.03, rely=0.25)
 
-        self.gera_sen_random()
-        
-        
-        self.l_tip_cli = Label(self.tela_cadastra, text = "Tipo:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
-        self.l_tip_cli.place(relx=0.03, rely=0.4)
-        self.tipo = StringVar()
-        self.rb_pessoa = Radiobutton(self.tela_cadastra, text="Pessoa Física", variable= self.tipo, value="Pessoa", command=lambda : self.gera_cod_random(self.tipo.get()), 
-                                     bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
-        self.rb_pessoa.place (relx=0.3, rely=0.4)
-        self.rb_empresa = Radiobutton(self.tela_cadastra, text="Empresa", variable= self.tipo, value="Empresa", command=lambda : self.gera_cod_random(self.tipo.get()), 
-                                      bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
-        self.rb_empresa.place (relx=0.3, rely=0.55)
+                            self.gera_sen_random()
+                            
+                            
+                            self.l_tip_cli = Label(self.tela_cadastra, text = "Tipo:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+                            self.l_tip_cli.place(relx=0.03, rely=0.4)
+                            self.tipo = StringVar()
+                            self.rb_pessoa = Radiobutton(self.tela_cadastra, text="Pessoa Física", variable= self.tipo, value="Pessoa", command=lambda : self.gera_cod_random(self.tipo.get()), 
+                                                        bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
+                            self.rb_pessoa.place (relx=0.3, rely=0.4)
+                            self.rb_empresa = Radiobutton(self.tela_cadastra, text="Empresa", variable= self.tipo, value="Empresa", command=lambda : self.gera_cod_random(self.tipo.get()), 
+                                                        bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
+                            self.rb_empresa.place (relx=0.3, rely=0.55)
 
 
-        self.l_cod_cli = Label(self.tela_cadastra, text = "Cód. : ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
-        self.l_cod_cli.place(relx=0.03, rely=0.7)
+                            self.l_cod_cli = Label(self.tela_cadastra, text = "Cód. : ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
+                            self.l_cod_cli.place(relx=0.03, rely=0.7)
 
-        self.botao_volta = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Voltar", 
-                                  font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
-        self.botao_volta.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
+                            self.botao_volta = Button(self.tela_cadastra, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Voltar", 
+                                                    font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
+                            self.botao_volta.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
 
     
     
@@ -814,7 +940,7 @@ class SistemaBancario(Funcoes):
             for self.seg in self.bancoDados.historico[self.cod][self.dia]:
                 self.lista_cliente.insert(0, self.dia + " R$" + str(self.bancoDados.historico[self.cod][self.dia][self.seg]["Valor"]))
                 self.tempos.insert(0,[self.dia, self.seg])
-                if (self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Saque") or (self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Pagar credito"):
+                if (self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Saque") or (self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Pagar credito") or (self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Pagamento Programado"):
                     self.lista_cliente.itemconfig(0, {'fg' : '#E9441B'})
                 elif self.bancoDados.historico[self.cod][self.dia][self.seg]["Tipo"] == "Credito":
                     self.lista_cliente.itemconfig(0, {'fg' : '#cd4fe6'})

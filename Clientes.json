@@ -6,15 +6,15 @@
         "Telefone": "8344-5678",
         "Senha": "senha",
         "CPF/CNPJ": "783990123-76",
-        "Saldo": 1000.0,
-        "Credito": 0
+        "Saldo": 0.0,
+        "Credito": 1500.0
     },
     "4167.1-46": {
         "Tipo": "Empresa",
         "Nome": "Apple",
         "Endereco": "Abadiania Sul",
         "Telefone": "8000-3432",
-        "Senha": "0DJ2qI,;",
+        "Senha": "senha",
         "CPF/CNPJ": "32498234.432",
         "Saldo": 50000.0,
         "Credito": 0.0
