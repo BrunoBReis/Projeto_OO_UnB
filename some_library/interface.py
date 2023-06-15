@@ -3,23 +3,24 @@ import string
 from tkinter import *
 from some_library.atm import *
 
-# Criando um objeto para trazer a classe "Tk()" que traz tudo que a gente vai usar na interface 
+
+# Criando um objeto para trazer a classe "Tk()" com suas funcionalidades 
 
 root = Tk()
 
-#Classe para funções que interagem diretamente com a interface
 
 class Funcoes():
-    
-#Função para limpar a tela do nosso caixa eletronico, podendo colocar novos widgets "atualizando" a tela kk
+    """Classe para funções que interagem diretamente com a interface """    
 
     def limpa_tela(self, tela):
+        """ Função para limpar a tela do nosso caixa eletronico """
         
         for widgets in tela.winfo_children():
             widgets.destroy()
 
 
     def gera_cod_random(self, tipo):
+        """ Função que gera um código para tipo Pessoa e adiciona algumas partes para a interface """
 
         num = random.randint(1000, 9999)
         num2 = random.randint(10,99)
@@ -36,6 +37,8 @@ class Funcoes():
         self.botao_cadastra.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
 
     def gera_sen_random(self):
+        """ Função que gera um código aleatório para um novo usuário e adiciona algumas coisas à interface """
+
         carac = string.ascii_letters + string.digits + string.punctuation
         self.senha_segura = ""
         for i in range(8):
@@ -45,18 +48,16 @@ class Funcoes():
         self.l_senreal_cli.place(relx=0.25, rely=0.25)
 
 
-
-
-
-#Função para fazer a confirmação dos dados e permitir o programa avançar para a próxima tela
-
     def logar(self):
+        """ Função para fazer a confirmação dos dados e permitir o programa avançar para a próxima tela """
+
         self.usuario = {}
         num1 = self.en_cod_part_1.get()
         num2 = self.en_cod_part_2.get()
         num3 = self.en_cod_part_3.get()
         self.cod = num1 + "." + num2 + "-" + num3
         self.senha = self.en_senha.get()
+
         if (self.cod in self.bancoDados.gerentes) == True:
             if (self.senha == self.bancoDados.gerentes[self.cod]["Senha"]) == True:
                 nome = self.bancoDados.gerentes[self.cod]["Nome"]
@@ -80,7 +81,10 @@ class Funcoes():
         
 
     def select_edit(self):
+        """ Função para alterar os dados dos clientes pelo gerente """
+        
         selecao = self.lista_gerente.curselection()
+        
         if selecao == ():
             self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
         else:
@@ -88,7 +92,10 @@ class Funcoes():
             self.tela_1_edita_cli(res)
 
     def select_del(self):
+        """ Função para deletar os dados dos clientes pelo gerente """
+
         selecao = self.lista_gerente.curselection()
+
         if selecao == ():
             self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
         else:
@@ -96,7 +103,10 @@ class Funcoes():
             self.tela_remove_cli(res)
     
     def select_view(self):
+        """ Função que mostra as propriedades do cliente selecioando pelo gerente """
+        
         selecao = self.lista_gerente.curselection()
+        
         if selecao == ():
             self.mostra_aviso("AVISO: Você tem que selecionar o cliente\n para fazer a ação designada!")
         else:
@@ -104,13 +114,18 @@ class Funcoes():
             self.tela_visualiza_cli(res)
         
     def select_view_hist(self):
+        """ Função que seleciona e visualiza o histórico de cliente pelo cliente """
+
         selecao = self.lista_cliente.curselection()
+        
         if selecao == ():
             self.mostra_aviso("AVISO: Você tem que selecionar o histórico\n para fazer a ação designada!")
         else:
             self.tela_visualiza_hist()
 
     def verifica_se_pode_del(self, cod):
+        """ Verifica se o saldo da conta está zerado para poder deletar """
+
         if self.bancoDados.clientes[cod]["Saldo"] == 0:
             self.user.remover_user(self.bancoDados.clientes, cod)
             self.tela_usuario("")
@@ -119,6 +134,8 @@ class Funcoes():
             self.mostra_aviso(f"ERROR! Usuário não pode deletar a conta {cod}\n enquanto ela não estiver ZERADA")
 
     def confere_pode_edit_cli(self, cod, dado, novo_dado):
+        """ Função responsável por alterar os dados do cliente pelo gerente e impossibilita as alterações vazias """
+
         if novo_dado == "":
             self.limpa_tela(self.tela_edita)
             self.mostra_aviso("ERROR! Não pode enviar uma mudança vazia!")
@@ -127,6 +144,8 @@ class Funcoes():
             self.tela_usuario("")   
 
     def confere_pode_sacar(self, valor):
+        """ Verifica se é possível de sacar dinheiro a partir do valor que é pedido """
+
         if valor > self.usuario["Saldo"]:
             self.limpa_tela(self.tela_saca_din)
             self.mostra_aviso("ERRO! Você não pode sacar mais dinheiro do que\n você possui na conta!")
@@ -135,6 +154,8 @@ class Funcoes():
             self.tela_usuario("")
 
     def confere_pode_depo(self, valor):
+        """ Verica se pode depositar dinheiro a partir do valor que é pedido """
+
         if valor <= 0:
             self.limpa_tela(self.tela_depo_din)
             self.mostra_aviso("ERRO! Você não pode depositar um valor nulo ou negativo!")
@@ -143,6 +164,8 @@ class Funcoes():
             self.tela_usuario("")
     
     def confere_pode_cred(self, valor):
+        """ Verifica para empresa e pessoa física se pode solicitar crédito """
+
         if self.usuario["Tipo"] == "Pessoa":
             if valor + self.bancoDados.clientes[self.cod]["Credito"] > 2000.0:
                 self.limpa_tela(self.tela_cred_din)
@@ -159,6 +182,10 @@ class Funcoes():
                 self.tela_usuario("")
 
     def confere_pode_pagar_cred(self):
+        """ Verifica se pode pagar crédito a partir do saldo existe na conta 
+        e realiza a transação caso possa pagar crédito, alterando os valores
+        no banco de dados de Clientes """
+
         if self.usuario["Credito"] > self.usuario["Saldo"]:
             self.limpa_tela(self.tela_visualiza)
             self.mostra_aviso("ERRO! Você não possui saldo suficiente para\n pagar a sua dívida!")
@@ -175,6 +202,8 @@ class Funcoes():
             self.tela_dados_conta()
 
     def confere_pode_pagar_prog(self):
+        """ Confere se pode realizar o pagamento programado """
+
         dia = int(self.en_data_real.get())
         mes = int(self.en_data_real2.get())
         ano = int(self.en_data_real3.get())
@@ -182,7 +211,14 @@ class Funcoes():
         min = int(self.en_hora_real2.get())
         seg = int(self.en_hora_real3.get())
         valor = float(self.en_valor_real.get())
-        dic = {"Mes" : mes, "Dia" : dia, "Ano" : ano, "Hora" : hora, "Minuto" : min, "Valor" : valor}
+        
+        dic = {"Mes" : mes,
+               "Dia" : dia,
+               "Ano" : ano,
+               "Hora" : hora,
+               "Minuto" : min,
+               "Valor" : valor,}
+        
         n = {}
         for i in self.bancoDados.programado[self.cod]:
             n = i
@@ -195,6 +231,8 @@ class Funcoes():
         self.tela_usuario("")
 
     def atualiza_sistema(self):
+        """ Atualiza o sistema de maneira geral """
+
         data_hoje = datetime.datetime.now()
         dia_atual = data_hoje.day
         mes_atual = data_hoje.month
@@ -254,8 +292,9 @@ class Funcoes():
                 json.dump(self.bancoDados.clientes, arquivo, indent=4)
             self.cliente.registrar_transacao(valor, self.cod, "Pagamento Programado", self.bancoDados.clientes[self.cod]["Saldo"])
 
-    
     def mostra_aviso(self, aviso):
+        """ Função responsável por avisos na interface """
+
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_aviso_select.place(relx= 0.5, rely= 0.5, relwidth= 0.8, relheight= 0.4, anchor=CENTER)
 
@@ -264,17 +303,15 @@ class Funcoes():
         self.botao_x.place(relx=0.95, rely=0.15, relwidth=0.1, relheight=0.3, anchor=CENTER)
 
         self.l_aviso = Label(self.tela_aviso_select, text = aviso, foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
-        self.l_aviso.place(relx=0.5, rely=0.5, anchor=CENTER)
-    
+        self.l_aviso.place(relx=0.5, rely=0.5, anchor=CENTER)    
 
-        
-                
-        
-# Classe da interface =)
+
 class SistemaBancario(Funcoes):
-    def __init__(self, master=None):
+    """ Sistema bancário responsável por intermediar as alterações do banco de dados """
 
-# Fazendo as compsições ou criando variáveis que vão ser necessárias
+    def __init__(self, master=None):
+        """ Inicializando os bancos de dados e outras características"""
+
         self.bancoDados = BancoDeDados()
         self.hist = {}
         self.usuario = {}
@@ -297,19 +334,17 @@ class SistemaBancario(Funcoes):
         self.criando_botoes()
         root.mainloop()
 
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE BÁSICA DO CAIXA ELETRÔNICO---------------------------------
-#---------------------------------------------------------------------------------------
-
-# Função para construir a interface principal (caixa eletrônico), e que diferentemente da tela, é imutável
     def interface_basica(self):
+        """ Função para construir a interface principal do caixa eletrônico """
+
         self.root.title("Caixa Bancário")
         self.root.configure(background="#5E5D5D") 
         self.root.geometry("700x700")
         self.root.resizable(False, False)
 
-    # Função para criar todos os botões de nosso Caixa Eletrônico principal
     def criando_botoes(self):
+        """ Função para criar todos os botões de nosso Caixa Eletrônico principal """
+
         self.botao1 = Button(self.root, bg="#9D9B9B", highlightbackground="#4D4D4D", highlightthickness=3, text="1", 
                              font=self.tela_fonte,  activebackground="#4D4D4D")
         self.botao1.place(relx= 0.03, rely= 0.55, relwidth= 0.22, relheight= 0.09)
@@ -359,12 +394,8 @@ class SistemaBancario(Funcoes):
         self.botao_confirma.place(relx= 0.51, rely= 0.88, relwidth= 0.22, relheight= 0.09) 
 
 
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE BÁSICA DA TELA DO CAIXA------------------------------------
-#---------------------------------------------------------------------------------------
-
-
     def faz_titulo(self, titulo):
+        """ Faz o título do caixa eletrôncio """
 
         self.fr_titulo_pag = Frame(self.frame1, bg="#50C649", highlightbackground= "#50C649", highlightthickness=1.5)
         self.fr_titulo_pag.place(relx= 0.5, rely= 0.04, relwidth= 0.20, relheight= 0.1, anchor=CENTER)
@@ -372,6 +403,8 @@ class SistemaBancario(Funcoes):
         self.login.place(relx=0.5, rely=0.5, anchor=CENTER)
 
     def faz_cabecalho(self):
+        """ Faz o cabeçalho do caixa eletrônico """
+
         self.bt_log_out = Button(self.frame1, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Log Out", 
                                   font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_inicial())
         self.bt_log_out.place(relx=0.90, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
@@ -388,35 +421,24 @@ class SistemaBancario(Funcoes):
                                   font=self.tela_fontinha, activebackground="#50C649", activeforeground="#50C649")
         self.bt_log_out.place(relx=0.10, rely=0.04, relwidth=0.20, relheight=0.1, anchor=CENTER)
 
-
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE TELA INICIAL-----------------------------------------------
-#---------------------------------------------------------------------------------------
-
-# Função constroi a tela inicial de quando ligamos o prgrama
     def tela_inicial(self):
+        """ Função constroi a tela inicial de quando ligamos o prgrama """
 
         self.limpa_tela(self.frame1)
 
         self.faz_titulo("MENU")
 
-
         self.botao_login = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Login", 
                                   font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_login(""))
         self.botao_login.place(relx=0.5, rely=0.42, relwidth=0.4, relheight=0.1, anchor=CENTER)
-
 
         self.botao_sair = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Sair", 
                                  font=self.tela_fonte, activebackground="#50C649", activeforeground="#1C1C1C", command=self.root.quit)
         self.botao_sair.place(relx=0.5, rely=0.54, relwidth=0.4, relheight=0.1, anchor=CENTER)
 
-
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE TELA LOGIN-----------------------------------------------
-#---------------------------------------------------------------------------------------
-
-# Função para construção da página de login
     def tela_login(self, aviso):
+        """ Função para construção da página de login """
+
         self.limpa_tela(self.frame1)
         self.faz_titulo("LOGIN")
 
@@ -447,18 +469,10 @@ class SistemaBancario(Funcoes):
         self.bt_voltar = Button(self.frame1, bg="#1C1C1C", highlightbackground="#50C649", highlightthickness=1.5, foreground="#50C649", text="Voltar", 
                                   font= ("Terminal", "12", "bold"), activebackground="#50C649", activeforeground="#1C1C1C", command=lambda : self.tela_inicial())
         self.bt_voltar.place(relx=0.88, rely=0.90, relwidth=0.11, relheight=0.09)
-
-
-
-
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE TELA USUÁRIO-----------------------------------------------
-#---------------------------------------------------------------------------------------
-
-# Função para construção da tela de usuário
-# Tive que fazer uma gambiarra e essa função também faz parte de confirmar se os dados 
+ 
 # estão coerentes e gerar a pagina correspondente para o devido tipo de usuário ("Gerente" ou "Cliente")
     def tela_usuario(self, aviso):
+        """ Função para construção da tela de usuário e confirmação dos dados """
 
         self.limpa_tela(self.frame1)
         self.atualiza_sistema()
@@ -488,8 +502,8 @@ class SistemaBancario(Funcoes):
                 self.mostra_funcoes_gerente()
                 self.faz_titulo("GERENTE")
 
-    # Função para padronizar frames do menu de usuários
     def frames_menu_de_usuário(self):
+        """ Função para padronizar frames do menu de usuários """
 
         self.fr_info_conta = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.fr_info_conta.place(relx= 0.01, rely= 0.12, relwidth= 0.71, relheight= 0.36)
@@ -500,13 +514,9 @@ class SistemaBancario(Funcoes):
         self.fr_lista = Frame (self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.fr_lista.place(relx= 0.73, rely= 0.12, relwidth= 0.27, relheight= 0.88)
 
-    
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE PÁGINA GERENTE-----------------------------------------------
-#---------------------------------------------------------------------------------------
-
-
     def mostra_dados_gerente(self):
+        """ Interface da página gerentes """
+
         self.l_admin = Label(self.fr_info_conta, text = "ADMINISTRADOR", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_admin.place(relx=0.02, rely=0.01)
         
@@ -517,6 +527,8 @@ class SistemaBancario(Funcoes):
         self.l_codigo_conta.place(relx=0.02, rely=0.7)
     
     def mostra_lista_gerente(self):
+        """ Mostra a lista de gerentes buscando a informação no banco de dados pelo gerente """
+
         self.l_cliente_lista = Label(self.fr_lista, text = "Clientes", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_cliente_lista.place(relx=0.5, rely=0.1, anchor=CENTER)
         
@@ -530,8 +542,9 @@ class SistemaBancario(Funcoes):
         self.lista_gerente.place(relx=0.0, rely= 0.2, relwidth=0.9, relheight=0.8)
         self.scrollbar_lista.config(command= self.lista_gerente.yview)
         
-    
     def mostra_funcoes_gerente(self):
+        """ Mostra as funções do gerente pelo gerente """
+
         self.bt_cadastra = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Cadastrar novo cliente", 
                                   font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
         self.bt_cadastra.place(relx=0, rely=0, relwidth=1, relheight=0.25)
@@ -550,6 +563,7 @@ class SistemaBancario(Funcoes):
 
 
     def tela_1_cadastra_cli(self):
+        """ Tela responsável pelo cadastro do cliente pelo gerente """
 
         self.tela_cadastra = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_cadastra.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.9, anchor=CENTER)
@@ -590,9 +604,9 @@ class SistemaBancario(Funcoes):
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_cadastra_cliente())
         self.botao_continua.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
 
-    
     def tela_2_cadastra_cliente(self):
-        
+        """ Segunda tela responsável pelo cadastro do cliente pelo gerente """
+
         self.nome = self.en_nomereal_cli.get()
         self.endereco = self.en_endreal_cli.get()
         self.telefone = self.en_telreal_cli.get()
@@ -612,7 +626,6 @@ class SistemaBancario(Funcoes):
 
         self.gera_sen_random()
         
-        
         self.l_tip_cli = Label(self.tela_cadastra, text = "Tipo:", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
         self.l_tip_cli.place(relx=0.03, rely=0.4)
         self.tipo = StringVar()
@@ -623,7 +636,6 @@ class SistemaBancario(Funcoes):
                                       bg="#1C1C1C", foreground="#50C649", highlightcolor="#1C1C1C", highlightbackground="#50C649", activebackground="#1C1C1C", activeforeground="#50C649", selectcolor="#1c1c1c", font=self.tela_fontinha)
         self.rb_empresa.place (relx=0.3, rely=0.55)
 
-
         self.l_cod_cli = Label(self.tela_cadastra, text = "Cód. : ", foreground="#50C649", background="#1C1C1C", font=self.tela_fontinha)
         self.l_cod_cli.place(relx=0.03, rely=0.7)
 
@@ -631,9 +643,9 @@ class SistemaBancario(Funcoes):
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_1_cadastra_cli())
         self.botao_volta.place(relx=0.5, rely=0.93, relwidth=0.45, relheight=0.1, anchor=CENTER)
 
-    
-    
     def tela_remove_cli(self, cod):
+        """ Tela responsável pela remossão de um certo usuário pelo gerente """
+
         self.tela_deleta = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_deleta.place(relx= 0.5, rely= 0.5, relwidth= 0.6, relheight= 0.8, anchor=CENTER)
 
@@ -662,10 +674,9 @@ class SistemaBancario(Funcoes):
         self.botao_confirma = Button(self.tela_deleta, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.verifica_se_pode_del(cod))
         self.botao_confirma.place(relx=0.7, rely=0.85, relwidth=0.3, relheight=0.1, anchor=CENTER)
-
         
-
     def tela_1_edita_cli(self, cod = ""):
+        """ Tela responsável pela edição dos dadso do cliente pelo gerente """
         
         self.tela_edita = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_edita.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
@@ -708,9 +719,10 @@ class SistemaBancario(Funcoes):
         self.bt_edita_sen = Button(self.tela_edita, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Editar", 
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_2_edita_cli("Senha", cod))
         self.bt_edita_sen.place(relx=0.5, rely=0.92, relwidth=0.3, relheight=0.09, anchor=CENTER)
-
     
     def tela_2_edita_cli(self, escolha, cod):
+        """ Segunda tela responsável pela edição dos dados do cliente pelo gerente """
+
         self.tela_edita = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_edita.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -735,9 +747,9 @@ class SistemaBancario(Funcoes):
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_edit_cli(cod, escolha, self.en_nova_esc_cli.get()))
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
 
-
     def tela_visualiza_cli(self, cod = ""):
-        
+        """ Tela responsável por visualizar os dados do cliente selecioando pelo gerente """
+
         self.tela_visualiza = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_visualiza.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -770,12 +782,9 @@ class SistemaBancario(Funcoes):
         self.l_salreal_cli = Label(self.tela_visualiza, text = "R$ " + str(self.bancoDados.clientes[cod]["Saldo"]), foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_salreal_cli.place(relx=0.03, rely=0.70)
 
-            
-#---------------------------------------------------------------------------------------
-#------------------INTERFACE PAGINA CLIENTES--------------------------------------------
-#---------------------------------------------------------------------------------------
-
     def mostra_dados_cliente(self):
+        """ Inicio da interface da classe clientes """
+
         self.l_nome_cliente = Label(self.fr_info_conta, text = self.usuario["Nome"], foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_nome_cliente.place(relx=0.02, rely=0.01)
         
@@ -796,6 +805,8 @@ class SistemaBancario(Funcoes):
         self.botao_ver_conta.place(relx=0.9, rely=0.15, relwidth=0.2, relheight=0.3, anchor=CENTER)
     
     def mostra_lista_cliente(self):
+        """ Mostra a lista de clientes para os clientes além de outras funcionalidades """
+
         self.l_hist_lista = Label(self.fr_lista, text = "Histórico", foreground="#50C649", background="#1C1C1C", font=self.tela_fonte)
         self.l_hist_lista.place(relx=0.5, rely=0.1, anchor=CENTER)
         
@@ -822,6 +833,8 @@ class SistemaBancario(Funcoes):
         self.scrollbar_lista.config(command= self.lista_cliente.yview)
 
     def mostra_funcoes_cliente(self):
+        """ Mostra as funções de clientes para os clientes """
+
         self.bt_sacar = Button(self.fr_acoes, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Sacar", 
                                   font=self.tela_fonte, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.tela_sacar())
         self.bt_sacar.place(relx=0, rely=0, relwidth=1, relheight=0.2)
@@ -844,6 +857,7 @@ class SistemaBancario(Funcoes):
 
     
     def tela_dados_conta(self):
+        """ Mostra a tela de dados dos clientes para os clientes """
         
         self.tela_visualiza = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_visualiza.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
@@ -885,6 +899,8 @@ class SistemaBancario(Funcoes):
         self.bt_pagar.place(relx=0.5, rely=0.9, relwidth=0.5, relheight=0.1)
     
     def tela_sacar(self):
+        """ Tela de saque para os clientes """
+        
         self.tela_saca_din = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_saca_din.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -910,6 +926,8 @@ class SistemaBancario(Funcoes):
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
 
     def tela_depositar(self):
+        """ Tela de depósito para os clientes """
+
         self.tela_dep_din = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_dep_din.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -935,6 +953,8 @@ class SistemaBancario(Funcoes):
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
 
     def tela_pagar_programado(self):
+        """ Tela de pagamento programado para o cliente """
+        
         self.tela_pag_prog = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_pag_prog.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -984,6 +1004,8 @@ class SistemaBancario(Funcoes):
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.5, relheight=0.1, anchor=CENTER)
 
     def tela_visualiza_hist(self):
+        """ Tela responsável por visualizar o histórico do cliente pelo cliente """
+
         item = self.lista_cliente.curselection()
         tempo = self.tempos[item[0]]
 
@@ -1021,6 +1043,8 @@ class SistemaBancario(Funcoes):
         
 
     def tela_solicita_crédito(self):
+        """ Tela responsável por visualizar o crédito do cliente pelo cliente """
+
         self.tela_cred_din = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_cred_din.place(relx= 0.5, rely= 0.5, relwidth= 0.5, relheight= 0.8, anchor=CENTER)
 
@@ -1051,14 +1075,9 @@ class SistemaBancario(Funcoes):
         self.bt_confirmar = Button(self.tela_cred_din, bg="#50C649", highlightbackground="#50C649", highlightthickness=1.5, foreground="#1C1C1C", text="Confirmar", 
                                   font=self.tela_fontinha, activebackground="#1C1C1C", activeforeground="#50C649", command=lambda : self.confere_pode_cred(float(self.en_quanto_cred.get())))
         self.bt_confirmar.place(relx=0.5, rely=0.9, relwidth=0.45, relheight=0.15, anchor=CENTER)
-
-    
-#---------------------------------------------------------------------------------------
-#------------------CONFIRMA SENHA (NÃO ESTÁ SENDO APLICADO AINDA)-----------------------
-#---------------------------------------------------------------------------------------
-    
     
     def tela_confirma_senha(self, cod):
+        """ FUNÇÃO NÃO ESTÁ SENDO UTILIZADA """
 
         self.tela_aviso_select = Frame(self.frame1, bd = 4, bg="#1C1C1C", highlightbackground= "#50C649", highlightthickness=3)
         self.tela_aviso_select.place(relx= 0.5, rely= 0.3, relwidth= 0.5, relheight= 0.5, anchor=CENTER)
