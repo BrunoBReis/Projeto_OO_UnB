@@ -18,6 +18,8 @@ class BancoDeDados:
             self.historico = json.load(HistFile)
         with open("Pagamento_programado.json") as Pagfile:
             self.programado = json.load(Pagfile)
+        with open("Atualizacoes.json") as Atufile:
+            self.atualizacoes = json.load(Atufile)
 
 
 #---------------------------------------------------------------------------------------
@@ -100,8 +102,11 @@ class Cliente(Usuario):
     # sugestão do professor foi fazer uma implentação disso no json como um pagamento
     # que está agendado e posteriormente confirmar essa data com algum bibloteca 
     # depois relizar o pagamento automaticamente
-    def pagamento_programado(self):
-        pass
+    def pagamento_programado(self, programado, dic, codigo, num):
+        programado[codigo].update({num : dic})
+        
+        with open('Pagamento_programado.json', 'w') as pagfile:
+            json.dump(programado, pagfile, indent=4)
     
     def visualizar_historico(self):
         with open('Historico.json') as historico_file:
@@ -134,7 +139,6 @@ class Cliente(Usuario):
         else:
             historico_dic[codigo].update({data_hoje_str : transacao})
 
-
         with open('Historico.json', 'w') as historico_update:
             json.dump(historico_dic, historico_update, indent=4)
         
@@ -153,8 +157,14 @@ class Empresa(Cliente):
 
 # a ideia de slocitar crédito partiria de utilizar o pagamento agendado e acrescentar um juros
 # para ser pago em uma certa data
-    def solicitar_credito(self):
-        pass
+    def solicitar_credito(self, valor, clientes, codigo, credito, saldo):
+        credito += valor
+        saldo += valor
+        clientes[codigo]["Saldo"] = saldo
+        clientes[codigo]["Credito"] = credito
+        with open('Clientes.json', 'w') as clientes_file:
+            json.dump(clientes, clientes_file, indent=4)
+        self.registrar_transacao(valor, codigo, 'Credito', saldo)
     
 
 #---------------------------------------------------------------------------------------
@@ -166,5 +176,11 @@ class PessoaFisica(Cliente):
         super().__init__(saldo, nome, endereco, telefone, senha, tipo, codigo)
         self.cpf = cpf
 
-    def solicitar_credito(self):
-        pass
+    def solicitar_credito(self, valor, clientes, codigo, credito, saldo):
+        credito += valor
+        saldo += valor
+        clientes[codigo]["Saldo"] = saldo
+        clientes[codigo]["Credito"] = credito
+        with open('Clientes.json', 'w') as clientes_file:
+            json.dump(clientes, clientes_file, indent=4)
+        self.registrar_transacao(valor, codigo, 'Credito', saldo)

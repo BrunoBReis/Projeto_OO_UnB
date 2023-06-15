@@ -6,8 +6,8 @@
         "Telefone": "8344-5678",
         "Senha": "senha",
         "CPF/CNPJ": "783990123-76",
-        "Saldo": 65.0,
-        "Credito": 0.0
+        "Saldo": 1000.0,
+        "Credito": 0
     },
     "4167.1-46": {
         "Tipo": "Empresa",
@@ -46,13 +46,13 @@
         "Telefone": "8000-1234",
         "Senha": "SempreAlem123",
         "CPF/CNPJ": "345234592844.22",
-        "Saldo": 100000.0,
-        "Credito": 0.0
+        "Saldo": 96000.0,
+        "Credito": 1407.09
     },
     "1262.0-60": {
         "Tipo": "Pessoa",
         "Nome": "Nevil Longbottom",
-        "Endereco": "Expresso do amanh\u00e3",
+        "Endereco": "Brasilia",
         "Telefone": "99133-9938",
         "Senha": "senha",
         "CPF/CNPJ": "123854888-00",
@@ -64,7 +64,7 @@
         "Nome": "Davi Levy",
         "Endereco": "sqs 112 bloco A",
         "Telefone": "99122-6858",
-        "Senha": "123",
+        "Senha": "senha",
         "CPF/CNPJ": "738095352-68",
         "Saldo": 300.0,
         "Credito": 0.0
